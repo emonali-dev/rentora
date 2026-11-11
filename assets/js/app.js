@@ -11,7 +11,8 @@ const NAV = [
   { id: 'property', t: 'সম্পত্তি ও ইউনিট', short: 'সম্পত্তি', i: 'building' },
   { id: 'tenants', t: 'ভাড়াটিয়া', i: 'users' },
   { id: 'bills', t: 'ইনভয়েস ও বিল', short: 'বিল', i: 'receipt' },
-  { id: 'money', t: 'আয়-ব্যয়', i: 'chart' },
+  { id: 'money', t: 'আয়-ব্যয়', i: 'wallet' },
+  { id: 'reports', t: 'লাভ-ক্ষতি রিপোর্ট', short: 'রিপোর্ট', i: 'chart' },
   { id: 'messages', t: 'SMS ও WhatsApp', i: 'message' },
   { id: 'plan', t: 'সাবস্ক্রিপশন', i: 'crown' },
   { id: 'settings', t: 'সেটিংস', i: 'settings' },
@@ -127,7 +128,7 @@ const openInvoices = () => S.d.invoices.filter(i => ['unpaid', 'partial'].includ
 const guard = () => { if (!writable()) { toast('সাবস্ক্রিপশনের মেয়াদ শেষ। নবায়ন করুন।', true); return false; } if (!can.manage()) { toast('এই কাজের অনুমতি শুধু মালিক ও ম্যানেজারের।', true); return false; } return true; };
 
 // ---------------- Router ----------------
-const ROUTES = { home: pageHome, property: pageProperty, tenants: pageTenants, bills: pageBills, money: pageMoney, messages: pageMessages, plan: pagePlan, settings: pageSettings };
+const ROUTES = { home: pageHome, property: pageProperty, tenants: pageTenants, bills: pageBills, money: pageMoney, reports: pageReports, messages: pageMessages, plan: pagePlan, settings: pageSettings };
 async function route() {
   const id = (location.hash.slice(1) || 'home').split('/')[0];
   const r = ROUTES[id] ? id : 'home';
@@ -573,6 +574,51 @@ function ledgerSheet(r) {
       await run(r.id ? S.db.from('ledger_entries').update(row).eq('id', r.id) : S.db.from('ledger_entries').insert({ ...row, entry_type: r.entry_type, org_id: S.org.id }), 'সংরক্ষণ হয়েছে'); pageMoney(); } });
   $('[data-del]', d)?.addEventListener('click', async () => { await run(S.db.from('ledger_entries').delete().eq('id', r.id), 'মুছে ফেলা হয়েছে'); d.close(); pageMoney(); });
 }
+
+// ---------------- Reports (yearly profit & loss, by property, dues ageing) ----------------
+let repYear = Number(todayISO().slice(0, 4));
+async function pageReports() {
+  const y = repYear, from = `${y}-01-01`, to = `${y + 1}-01-01`;
+  const { data: rows } = await S.db.from('ledger_entries').select('*').eq('org_id', S.org.id).gte('entry_date', from).lt('entry_date', to);
+  const months = Array.from({ length: 12 }, (_, k) => `${y}-${String(k + 1).padStart(2, '0')}`);
+  const sum = (a, f = r => r.amount) => a.reduce((s, r) => s + Number(f(r)), 0);
+  const billedBy = m => sum(S.d.invoices.filter(i => i.status !== 'void' && i.period.slice(0, 7) === m), i => i.subtotal);
+  const table = months.map(m => { const r = rows.filter(x => x.entry_date.slice(0, 7) === m);
+    const rent = sum(r.filter(x => x.entry_type === 'income' && x.payment_id)), other = sum(r.filter(x => x.entry_type === 'income' && !x.payment_id)), exp = sum(r.filter(x => x.entry_type === 'expense'));
+    return { m, billed: billedBy(m), rent, other, exp, profit: rent + other - exp }; });
+  const T = k => sum(table, r => r[k]);
+  const props = [...S.d.properties.map(p => ({ id: p.id, name: p.name })), { id: null, name: 'সাধারণ (কোনো সম্পত্তি নয়)' }].map(p => {
+    const r = rows.filter(x => (x.property_id || null) === p.id); const inc = sum(r.filter(x => x.entry_type === 'income')), exp = sum(r.filter(x => x.entry_type === 'expense'));
+    return { ...p, inc, exp, profit: inc - exp }; }).filter(p => p.inc || p.exp);
+  const cats = {}; rows.filter(r => r.entry_type === 'expense').forEach(r => cats[r.category] = (cats[r.category] || 0) + Number(r.amount));
+  const today = todayISO(), days = i => Math.floor((Date.parse(today) - Date.parse(i.due_date)) / 864e5);
+  const open = openInvoices().filter(i => i.due_date < today);
+  const age = [['১–৩০ দিন', i => days(i) <= 30], ['৩১–৬০ দিন', i => days(i) > 30 && days(i) <= 60], ['৬০ দিনের বেশি', i => days(i) > 60]].map(([t, f]) => { const a = open.filter(f); return { t, n: a.length, amt: sum(a, i => due(i)) }; });
+  const billedMonths = table.filter(r => r.billed > 0), rate = billedMonths.length ? Math.min(100, Math.round(sum(billedMonths, r => r.rent) / sum(billedMonths, r => r.billed) * 100)) : 0;
+  const maxAbs = Math.max(1, ...table.map(r => Math.max(r.rent + r.other, r.exp)));
+  view().innerHTML = String(html`
+    <div class="toolbar"><div class="seg" role="group" aria-label="বছর"><button type="button" data-y="-1" aria-label="আগের বছর">‹</button><button type="button" aria-pressed="true" style="min-width:6rem">${bnDigits(y)}</button><button type="button" data-y="1" aria-label="পরের বছর">›</button></div>
+      <span class="grow"></span><button class="btn" id="repCsv">${icon('download')}CSV</button><button class="btn" id="repPrint">${icon('print')}প্রিন্ট / PDF</button></div>
+    <section class="ledger-hero"><div class="row"><div><div class="label">${bnDigits(y)} সালের নিট লাভ</div><div class="big num">${tk(T('profit'))}</div></div><div class="of">আদায়ের হার ${n(rate)}%</div></div>
+      <div class="hero-figs"><div><span class="label">মোট বিল</span><b class="num">${tk(T('billed'))}</b></div><div><span class="label">ভাড়া আদায়</span><b class="num">${tk(T('rent'))}</b></div><div><span class="label">অন্যান্য আয়</span><b class="num">${tk(T('other'))}</b></div><div><span class="label">মোট খরচ</span><b class="num">${tk(T('exp'))}</b></div></div></section>
+    <section class="panel" style="margin-top:1rem"><div class="panel-head"><h2>মাসভিত্তিক লাভ-ক্ষতি</h2><div class="legend"><span><i style="background:var(--paid)"></i>আয়</span><span><i style="background:var(--gold)"></i>খরচ</span></div></div>
+      <div class="bars" style="grid-template-columns:repeat(12,1fr);height:150px">${table.map(r => html`<div class="m" title="${monthLabel(r.m + '-01')}: লাভ ${tk(r.profit)}"><div class="pair"><i class="inc" style="height:${(r.rent + r.other) / maxAbs * 100}%"></i><i class="exp" style="height:${r.exp / maxAbs * 100}%"></i></div><small>${shortMonth(r.m + '-01')}</small></div>`)}</div>
+      <div class="table-wrap" style="margin-top:1rem"><table class="t"><thead><tr><th>মাস</th><th class="r">বিল</th><th class="r">ভাড়া আদায়</th><th class="r">অন্যান্য আয়</th><th class="r">খরচ</th><th class="r">লাভ</th></tr></thead><tbody>
+        ${table.map(r => html`<tr><td>${monthLabel(r.m + '-01')}</td><td class="r num">${tk(r.billed)}</td><td class="r num">${tk(r.rent)}</td><td class="r num">${tk(r.other)}</td><td class="r num">${tk(r.exp)}</td><td class="r num" style="color:${r.profit < 0 ? 'var(--due)' : 'inherit'};font-weight:700">${tk(r.profit)}</td></tr>`)}
+        <tr><td><b>মোট</b></td><td class="r num"><b>${tk(T('billed'))}</b></td><td class="r num"><b>${tk(T('rent'))}</b></td><td class="r num"><b>${tk(T('other'))}</b></td><td class="r num"><b>${tk(T('exp'))}</b></td><td class="r num"><b>${tk(T('profit'))}</b></td></tr></tbody></table></div></section>
+    <div class="cols">
+      <section class="panel" style="margin-top:1rem"><h3 style="margin-bottom:.6rem">সম্পত্তিভিত্তিক লাভ</h3>${props.length ? html`<div class="table-wrap"><table class="t"><thead><tr><th>সম্পত্তি</th><th class="r">আয়</th><th class="r">খরচ</th><th class="r">লাভ</th></tr></thead><tbody>${props.map(p => html`<tr><td>${p.name}</td><td class="r num">${tk(p.inc)}</td><td class="r num">${tk(p.exp)}</td><td class="r num"><b>${tk(p.profit)}</b></td></tr>`)}</tbody></table></div>` : html`<p class="muted">এ বছরে কোনো লেনদেন নেই।</p>`}
+        <h3 style="margin:1.2rem 0 .6rem">খরচের খাত</h3>${Object.keys(cats).length ? html`<div class="list">${Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, v]) => html`<div class="list-row"><span>${c}</span><b class="num">${tk(v)}</b></div>`)}</div>` : html`<p class="muted">কোনো খরচ নেই।</p>`}</section>
+      <section class="panel" style="margin-top:1rem"><h3 style="margin-bottom:.3rem">বকেয়া কতদিনের</h3><p class="small muted" style="margin-bottom:.6rem">আজ পর্যন্ত শেষ তারিখ পার হওয়া সব ইনভয়েস</p>
+        <div class="list">${age.map(a => html`<div class="list-row"><div><div class="title">${a.t}</div><div class="sub">${n(a.n)}টি ইনভয়েস</div></div><b class="num" style="color:${a.amt ? 'var(--due)' : 'inherit'}">${tk(a.amt)}</b></div>`)}</div>
+        ${open.length ? html`<h3 style="margin:1.2rem 0 .4rem">সবচেয়ে বেশি বকেয়া</h3><div class="list">${[...open].sort((a, b) => due(b) - due(a)).slice(0, 6).map(i => html`<div class="list-row click" data-inv="${i.id}"><div><div class="title">${T2name(i)}</div><div class="sub">${unitName(U(i.unit_id))} · ${monthLabel(i.period)} · ${n(days(i))} দিন</div></div><b class="num" style="color:var(--due)">${tk(due(i))}</b></div>`)}</div>` : ''}</section>
+    </div>`);
+  $$('[data-y]').forEach(b => b.onclick = () => { repYear += Number(b.dataset.y); pageReports(); });
+  $$('[data-inv]').forEach(r => r.onclick = () => invoiceSheet(r.dataset.inv));
+  $('#repCsv').onclick = () => download(`rentora-report-${y}.csv`, '﻿' + [['মাস', 'বিল', 'ভাড়া আদায়', 'অন্যান্য আয়', 'খরচ', 'লাভ'].join(','), ...table.map(r => [r.m, r.billed, r.rent, r.other, r.exp, r.profit].join(',')), ['মোট', T('billed'), T('rent'), T('other'), T('exp'), T('profit')].join(',')].join('\n'), 'text/csv');
+  $('#repPrint').onclick = () => printDoc(`<div class="doc">${docHead('লাভ-ক্ষতি রিপোর্ট', String(y))}<table><thead><tr><th>মাস</th><th class="r">বিল</th><th class="r">ভাড়া আদায়</th><th class="r">অন্যান্য আয়</th><th class="r">খরচ</th><th class="r">লাভ</th></tr></thead><tbody>${table.map(r => `<tr><td>${esc(monthLabel(r.m + '-01'))}</td><td class="r">${esc(tk(r.billed))}</td><td class="r">${esc(tk(r.rent))}</td><td class="r">${esc(tk(r.other))}</td><td class="r">${esc(tk(r.exp))}</td><td class="r">${esc(tk(r.profit))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(T('billed')))}</td><td class="r">${esc(tk(T('rent')))}</td><td class="r">${esc(tk(T('other')))}</td><td class="r">${esc(tk(T('exp')))}</td><td class="r">${esc(tk(T('profit')))}</td></tr></tbody></table><div class="foot"><span>তৈরি: ${esc(dateBn(today))}</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`);
+}
+const T2name = i => T(i.tenant_id)?.full_name || '—';
 
 // ---------------- Messages ----------------
 async function pageMessages() {

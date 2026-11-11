@@ -301,3 +301,4 @@ dialog.sheet.wide { width: min(860px, calc(100vw - 32px)); }
   .ledger-hero .row { gap: .4rem 1rem; }
   .hero-figs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .8rem; }
 }
+table.t td:first-child { white-space: nowrap; }
