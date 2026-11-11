@@ -84,6 +84,7 @@
 .lp-steps { list-style: none; counter-reset: s; padding: 0; margin: 2rem 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
 .lp-steps li { counter-increment: s; display: grid; gap: .35rem; align-content: start; padding-top: 3.2rem; position: relative; }
 .lp-steps li::before { content: counter(s); position: absolute; top: 0; left: 0; width: 42px; height: 42px; border-radius: 50%; background: var(--gold); color: #1d1606; font-weight: 700; display: grid; place-items: center; font-size: 1.1rem; }
+html[lang="bn"] .lp-steps li::before { content: counter(s, bengali); }
 .lp-steps li::after { content: ""; position: absolute; top: 21px; left: 52px; right: -8px; height: 2px; background: var(--line); }
 .lp-steps li:last-child::after { display: none; }
 .lp-steps b { font-family: var(--font-display); font-size: 1.12rem; }

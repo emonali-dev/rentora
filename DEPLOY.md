@@ -73,7 +73,7 @@ hsdmj.com-এর DNS যেখানে ম্যানেজ হয় (ডো�
 
 | Type | Name/Host | Value/Target | TTL |
 |---|---|---|---|
-| CNAME | `rentora` | `emonali-dev.github.io` | Auto |
+| CNAME | `basha` | `emonali-dev.github.io` | Auto |
 
 - Cloudflare ব্যবহার করলে প্রথমে **Proxy status: DNS only** (ধূসর মেঘ) রাখুন, যাতে GitHub HTTPS সার্টিফিকেট দিতে পারে।
 - `@`, `www` বা অন্য কোনো পুরনো রেকর্ড বদলাবেন না, মুছবেন না।

@@ -130,7 +130,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 .ledger-hero { background: var(--brand); color: #fff; border-radius: var(--r-lg); padding: 1.4rem 1.5rem; display: grid; gap: 1rem; position: relative; overflow: hidden; }
 :root[data-theme="dark"] .ledger-hero { background: #123b2f; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ledger-hero { background: #123b2f; } }
-.ledger-hero::after { content: ""; position: absolute; inset: 0 0 0 auto; width: 38%; background: repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.06) 27px 28px); pointer-events: none; }
+.ledger-hero::after { content: ""; position: absolute; inset: 0 0 0 auto; width: 38%; display: none; background: repeating-linear-gradient(0deg, transparent 0 27px, rgba(255,255,255,.06) 27px 28px); pointer-events: none; }
 .ledger-hero .row { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-end; position: relative; z-index: 1; }
 .ledger-hero .big { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; line-height: 1; }
 .ledger-hero .label { color: #cfe6da; font-size: .92rem; }
@@ -341,6 +341,7 @@ table.t td:first-child { white-space: nowrap; }
 .steps-list { list-style: none; counter-reset: st; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; }
 .steps-list li { counter-increment: st; display: flex; align-items: center; gap: .6rem; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); min-height: 56px; }
 .steps-list li::before { content: counter(st); flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--surface-2); color: var(--muted); }
+html[lang="bn"] .steps-list li::before { content: counter(st, bengali); }
 .steps-list li.done { color: var(--muted); } .steps-list li.done::before { content: "✓"; background: var(--paid); color: #fff; }
 .steps-list li.next { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); } .steps-list li.next::before { background: var(--gold); color: #1d1606; }
 .steps-list a, .steps-list .link-btn { font-weight: 600; color: var(--brand); text-align: left; }
