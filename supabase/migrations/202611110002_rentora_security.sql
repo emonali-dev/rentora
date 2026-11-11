@@ -99,7 +99,7 @@ end $$;
 create trigger leases_unit_status after insert or update of status, unit_id or delete on public.leases for each row execute function public.sync_unit_status();
 
 -- Utility amount from meter readings when not given explicitly
-create or replace function public.utility_amount() returns trigger language plpgsql as $$
+create or replace function public.utility_amount() returns trigger language plpgsql set search_path = public as $$
 begin
   if new.invoice_id is not null and tg_op = 'UPDATE' and old.invoice_id is not distinct from new.invoice_id
      and (new.amount, new.kind, new.period, new.unit_id) is distinct from (old.amount, old.kind, old.period, old.unit_id) then

@@ -18,6 +18,8 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
 
 ## ধাপ ২ — নতুন Supabase প্রজেক্ট
 
+> ✅ **সম্পন্ন (১১ নভেম্বর ২০২৬):** প্রজেক্ট `rentora` (ref `jjmzutebvwaeckcsvgyd`, Singapore, ফ্রি প্ল্যান) তৈরি, ৫টি মাইগ্রেশন চালানো, `config.js`-এ URL ও publishable key বসানো হয়েছে। বাকি শুধু নিচের ৩ ও ৪ নম্বর (Auth সেটিংস)।
+
 1. supabase.com › আপনার অর্গানাইজেশন › **New project**
    - নাম: `rentora`
    - Region: **Southeast Asia (Singapore)** — বাংলাদেশ থেকে সবচেয়ে দ্রুত
@@ -29,6 +31,7 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
    2. `202611110002_rentora_security.sql`
    3. `202611110003_rentora_functions.sql`
    4. `202611110004_rentora_profiles.sql`
+   5. `202611110005_rentora_function_grants.sql`
 3. **Authentication › URL Configuration**
    - Site URL: `https://rentora.hsdmj.com`
    - Redirect URLs-এ যোগ করুন: `https://rentora.hsdmj.com/**`
