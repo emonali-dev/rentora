@@ -302,3 +302,13 @@ dialog.sheet.wide { width: min(860px, calc(100vw - 32px)); }
   .hero-figs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .8rem; }
 }
 table.t td:first-child { white-space: nowrap; }
+/* Touch screens: every tap target at least 44px tall */
+@media (pointer: coarse) {
+  .link-btn { display: inline-flex; align-items: center; min-height: 44px; }
+  .unit-card .rooms button { min-height: 36px; padding: .2rem .7rem; }
+  input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--brand); }
+  .powered a { display: inline-block; padding: .6rem 0; }
+  .btn.sm { min-height: 40px; }
+}
+/* Installed as an app (Add to Home Screen) */
+@media (display-mode: standalone) { .demo-banner { padding-top: calc(.35rem + env(safe-area-inset-top, 0px)); } }
