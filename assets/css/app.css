@@ -2,7 +2,7 @@
    Concept: a landlord's rent ledger (ভাড়ার খাতা). Ledger green + brand gold on a cool paper ground.
    Desktop: green sidebar + content. Phone: app bar, bottom tabs, one central "টাকা জমা" action. */
 :root {
-  --paper: #f3f6f2; --surface: #ffffff; --surface-2: #eef3ef; --ink: #10231b; --muted: #4b5d55; --line: #dbe4dd;
+  --paper: #f3f6f2; --surface: #ffffff; --surface-2: #eef3ef; --ink: #10231b; --muted: #43554d; --line: #dbe4dd;
   --brand: #0e4a3a; --brand-ink: #ffffff; --brand-soft: #e1efe8; --gold: #c9971f; --gold-soft: #f8edcf;
   --paid: #1d8456; --paid-soft: #dcf1e5; --partial: #b26b00; --partial-soft: #fbecd2; --due: #c03a28; --due-soft: #fbe2dd;
   --vacant: #7c8a84; --vacant-soft: #e9eeeb; --focus: #c9971f;
@@ -35,7 +35,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 .num { font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
-.small { font-size: .875rem; }
+.small { font-size: .9rem; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
@@ -106,7 +106,7 @@ textarea.input { min-height: 90px; resize: vertical; }
   .trial-bar { padding: .5rem 16px; }
   .bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--surface); border-top: 1px solid var(--line);
     padding: .35rem max(6px, env(safe-area-inset-right, 0px)) calc(.35rem + env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px)); }
-  .bottom-nav a { display: grid; justify-items: center; gap: 2px; padding: .3rem 0; color: var(--muted); text-decoration: none; font-size: .74rem; font-weight: 600; }
+  .bottom-nav a { display: grid; justify-items: center; gap: 2px; padding: .3rem 0; color: var(--muted); text-decoration: none; font-size: .78rem; font-weight: 600; }
   .bottom-nav a[aria-current="page"] { color: var(--brand); }
   :root[data-theme="dark"] .bottom-nav a[aria-current="page"] { color: var(--gold); }
   .bottom-nav .icon { width: 24px; height: 24px; }
@@ -155,7 +155,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 .tile { text-align: left; border: 1px solid var(--line); border-left-width: 5px; border-radius: var(--r-md); padding: .6rem .7rem; background: var(--surface); cursor: pointer; display: grid; gap: .1rem; min-height: 92px; }
 .tile:hover { box-shadow: var(--shadow); }
 .tile .u { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
-.tile .t { font-size: .85rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile .t { font-size: .88rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tile .a { font-size: .9rem; font-weight: 600; }
 .tile.paid { border-left-color: var(--paid); } .tile.paid .a { color: var(--paid); }
 .tile.partial { border-left-color: var(--partial); background: linear-gradient(90deg, var(--partial-soft), var(--surface) 70%); } .tile.partial .a { color: var(--partial); }
@@ -367,3 +367,6 @@ html[lang="bn"] .steps-list li::before { content: counter(st, bengali); }
 .mark { background: url("../img/logo-128.png") center / cover no-repeat; color: transparent !important; font-size: 0 !important; box-shadow: 0 2px 6px rgba(0, 25, 80, .25); border-radius: 24%; overflow: hidden; }
 .lp-brand .mark, .topbar .mark, .side .mark { background-image: url("../img/logo-128.png"); }
 .auth-art .mark, .lp-final .mark { box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
+
+p, li, dd { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }

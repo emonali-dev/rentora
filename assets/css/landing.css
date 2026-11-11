@@ -51,7 +51,7 @@
 .lp-scr-tiles .vacant { border-left-color: var(--vacant); background: var(--surface-2); }
 .lp-scr-btn { justify-self: center; background: var(--gold); color: #1d1606; font-weight: 700; font-size: .85rem; border-radius: 99px; padding: 8px 16px; }
 .lp-phone figcaption { text-align: center; color: #b9d6c8; font-size: .78rem; margin-top: 14px; }
-@media (max-width: 860px) {
+@media (max-width: 720px) {
   .lp-hero-in { grid-template-columns: 1fr; }
   .lp-phone { width: min(290px, 86%); }
   .lp-screen { transform: none; }
@@ -140,3 +140,18 @@ html[lang="bn"] .lp-steps li::before { content: counter(s, bengali); }
 .lp-foot-in { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 1.5rem; padding-block: 2rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
 .lp-foot p { margin-top: .5rem; color: var(--muted); }
 @media (max-width: 700px) { .lp-foot-in { grid-template-columns: 1fr; } }
+
+/* Reading comfort: Bangla script needs a little more size and air than Latin. */
+.lp { font-size: 17px; }
+.lp p, .lp li, .lp dd { text-wrap: pretty; line-height: 1.8; }
+.lp h1, .lp h2, .lp h3 { text-wrap: balance; letter-spacing: -.005em; }
+.lp-sub, .lp-for { color: color-mix(in srgb, var(--ink) 78%, var(--muted)); }
+.lp-trust { font-size: 1rem; }
+.lp-scr-tiles .t { font-size: .78rem; }
+.lp-phone figcaption { font-size: .85rem; }
+@media (max-width: 520px) {
+  .lp { font-size: 16.5px; }
+  .lp-lead { font-size: 1.08rem; line-height: 1.8; }
+  .lp-big { width: 100%; justify-content: center; }
+  .lp-cta { flex-direction: column; }
+}
