@@ -1,6 +1,6 @@
 // Rentora owner dashboard (landlord, manager, accountant).
 import { getClient, IS_DEMO, exitDemo, html, raw, esc, $, $$, n, tk, monthLabel, shortMonth, dateBn, todayISO, monthStart, addMonths, LABEL, chip, icon,
-  toast, run, errText, openSheet, formSheet, confirmSheet, field, opts, initTheme, toggleTheme, poweredBy, demoBanner, download, printDoc, bnDigits } from './core.js';
+  toast, run, errText, openSheet, formSheet, confirmSheet, field, opts, initTheme, toggleTheme, poweredBy, demoBanner, download, printDoc, bnDigits, langButton } from './core.js';
 
 initTheme(); demoBanner();
 const S = { db: null, user: null, orgs: [], org: null, role: null, month: monthStart(), d: {}, settings: {}, plans: [] };
@@ -81,8 +81,9 @@ function chrome() {
   $('#sideUser').innerHTML = String(html`<div style="color:#fff;font-weight:600">${name}</div><div style="color:#bcd8ca">${LABEL.role[S.role]} · ${S.org.name}</div>`);
   $('#sidePowered').innerHTML = String(poweredBy());
   $('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme;
-  $('#fab').innerHTML = String(html`${icon('cash')}<span>টাকা জমা</span>`); $('#fab').onclick = () => paymentSheet();
-  $('#payBtnTop').innerHTML = String(html`${icon('cash')}<span>টাকা জমা</span>`); $('#payBtnTop').onclick = () => paymentSheet();
+  if (!$('#langBtn')) { const lb = langButton(); lb.id = 'langBtn'; $('#themeBtn').before(lb); }
+  $('#fab').innerHTML = String(html`${icon('cash')}<span>ভাড়া আদায় করুন</span>`); $('#fab').setAttribute('aria-label', 'ভাড়া আদায় করুন'); $('#fab').onclick = () => paymentSheet();
+  $('#payBtnTop').innerHTML = String(html`${icon('cash')}<span>ভাড়া আদায় করুন</span>`); $('#payBtnTop').onclick = () => paymentSheet();
   $('#payBtnTop').hidden = matchMedia('(max-width: 900px)').matches;
   trialBar();
 }
@@ -91,7 +92,7 @@ function navRender(cur) {
     + String(html`<a href="#" id="logoutLink">${icon('logout')}<span>লগ আউট</span></a>`);
   $('#logoutLink').onclick = e => { e.preventDefault(); logout(); };
   const bot = [NAV[0], NAV[1], null, NAV[2], { id: 'more', t: 'আরও', i: 'more' }];
-  $('#bottomNav').innerHTML = bot.map(x => x ? String(html`<a href="#${x.id}" ${(x.id === cur || (x.id === 'more' && !['home', 'property', 'tenants'].includes(cur))) ? raw('aria-current="page"') : ''}>${icon(x.i)}<span>${x.short || x.t}</span></a>`) : '<span class="spacer"></span>').join('');
+  $('#bottomNav').innerHTML = bot.map(x => x ? String(html`<a href="#${x.id}" ${(x.id === cur || (x.id === 'more' && !['home', 'property', 'tenants'].includes(cur))) ? raw('aria-current="page"') : ''}>${icon(x.i)}<span>${x.short || x.t}</span></a>`) : String(html`<span class="spacer" aria-hidden="true">আদায় করুন</span>`)).join('');
   $('#bottomNav a[href="#more"]').onclick = e => { e.preventDefault(); moreSheet(); };
 }
 function moreSheet() {
@@ -183,10 +184,10 @@ async function pageHome() {
       </section>
       <div class="stack">
         <section class="panel"><div class="panel-head"><h3>আয় বনাম খরচ</h3><div class="legend"><span><i style="background:var(--paid)"></i>আয়</span><span><i style="background:var(--gold)"></i>খরচ</span></div></div>
-          <div class="bars">${s.trend.map(t => html`<div class="m" title="${monthLabel(t.month + '-01')}: আয় ${tk(t.income)}, খরচ ${tk(t.expense)}"><div class="pair"><i class="inc" style="height:${t.income / maxBar * 100}%"></i><i class="exp" style="height:${t.expense / maxBar * 100}%"></i></div><small>${shortMonth(t.month + '-01')}</small></div>`)}</div></section>
+          ${maxBar <= 1 ? html`<p class="muted" style="padding:2.5rem 0;text-align:center">ভাড়া আদায় বা খরচ লিখলে গত ৬ মাসের হিসাব এখানে দেখা যাবে।</p>` : ''}<div class="bars" ${maxBar <= 1 ? raw('hidden') : ''}>${s.trend.map(t => html`<div class="m" title="${monthLabel(t.month + '-01')}: আয় ${tk(t.income)}, খরচ ${tk(t.expense)}"><div class="pair"><i class="inc" style="height:${t.income / maxBar * 100}%"></i><i class="exp" style="height:${t.expense / maxBar * 100}%"></i></div><small>${shortMonth(t.month + '-01')}</small></div>`)}</div></section>
         <section class="panel"><div class="panel-head"><h3>সাম্প্রতিক আদায়</h3><a class="link-btn small" href="#bills">সব দেখুন</a></div>
           ${recent.length ? html`<div class="list">${recent.map(p => { const i = by(S.d.invoices, p.invoice_id); return html`<div class="list-row click" data-receipt="${p.id}"><div><div class="title">${T(p.tenant_id)?.full_name}</div><div class="sub">${unitName(U(i?.unit_id), false)} · ${LABEL.method[p.method]} · ${dateBn(p.paid_on)}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`; })}</div>`
-            : html`<p class="muted">এখনো কোনো টাকা জমা হয়নি।</p>`}</section>
+            : html`<p class="muted">এখনো কোনো ভাড়া আদায় হয়নি।</p>`}</section>
       </div>
     </div>`);
   wireMonth(view(), pageHome);
@@ -209,7 +210,7 @@ function unitSheet(unitId) {
     <dl class="kv"><dt>ধরন</dt><dd>${LABEL.kind[u.kind]}</dd><dt>ভাড়া</dt><dd class="num">${tk(l?.monthly_rent ?? u.rent_amount)}</dd><dt>অবস্থা</dt><dd>${chip(u.status)}</dd>
       ${t ? html`<dt>ভাড়াটিয়া</dt><dd>${t.full_name}</dd><dt>মোবাইল</dt><dd><a href="tel:${t.phone}">${bnDigits(t.phone)}</a></dd><dt>চুক্তি শুরু</dt><dd>${dateBn(l.start_date)}</dd><dt>জামানত</dt><dd class="num">${tk(l.security_deposit)}</dd>` : ''}</dl>
     ${invs.length ? html`<h3 style="margin:1.2rem 0 .3rem">ইনভয়েস</h3><div class="list">${invs.slice(0, 6).map(i => html`<div class="list-row click" data-inv="${i.id}"><div><div class="title">${monthLabel(i.period)}</div><div class="sub">${i.invoice_no}</div></div><div class="right"><b class="num">${tk(i.subtotal)}</b>${chip(invStatus(i))}</div></div>`)}</div>` : ''}`,
-    foot: l ? html`<button class="btn" data-tenant="${t.id}">ভাড়াটিয়ার বিস্তারিত</button>${invs.some(i => i.status !== 'paid') ? html`<button class="btn gold" data-pay>${icon('cash')}টাকা জমা</button>` : ''}`
+    foot: l ? html`<button class="btn" data-tenant="${t.id}">ভাড়াটিয়ার বিস্তারিত</button>${invs.some(i => i.status !== 'paid') ? html`<button class="btn gold" data-pay>${icon('cash')}ভাড়া আদায় করুন</button>` : ''}`
       : (can.manage() && u.status !== 'maintenance' ? html`<button class="btn primary" data-lease>${icon('plus')}ভাড়াটিয়া বসান</button>` : '') });
   $$('[data-inv]', d).forEach(r => r.onclick = () => { d.close(); invoiceSheet(r.dataset.inv); });
   $('[data-tenant]', d)?.addEventListener('click', () => { d.close(); tenantSheet(t.id); });
@@ -315,7 +316,7 @@ async function pageTenants() {
 }
 function tenantEditSheet(t = {}, after) {
   if (!guard()) return;
-  formSheet({ title: t.id ? 'ভাড়াটিয়ার তথ্য সম্পাদনা' : 'নতুন ভাড়াটিয়া', fields: html`
+  const dlg = formSheet({ title: t.id ? 'ভাড়াটিয়ার তথ্য সম্পাদনা' : 'নতুন ভাড়াটিয়া', fields: html`
     <div class="grid-2">${field('পুরো নাম', html`<input class="input" name="full_name" required minlength="2" maxlength="120" value="${t.full_name || ''}">`)}
       ${field('মোবাইল', html`<input class="input" name="phone" required inputmode="tel" pattern="\\+?[0-9 \\-]{6,20}" value="${t.phone || ''}" placeholder="01XXXXXXXXX">`)}</div>
     <div class="grid-2">${field('ইমেইল', html`<input class="input" name="email" type="email" value="${t.email || ''}">`, 'দিলে ভাড়াটিয়া এই ইমেইলে লগইন করে নিজের বিল ও রসিদ দেখতে পারবেন।')}
@@ -325,13 +326,15 @@ function tenantEditSheet(t = {}, after) {
     ${field('স্থায়ী ঠিকানা', html`<input class="input" name="address" maxlength="300" value="${t.address || ''}">`)}
     <div class="grid-2">${field('জরুরি যোগাযোগ (নাম)', html`<input class="input" name="emergency_name" maxlength="120" value="${t.emergency_name || ''}">`)}
       ${field('জরুরি মোবাইল', html`<input class="input" name="emergency_phone" inputmode="tel" pattern="\\+?[0-9 \\-]{6,20}" value="${t.emergency_phone || ''}">`)}</div>
-    ${field('নোট', html`<textarea class="input" name="notes" maxlength="1000">${t.notes || ''}</textarea>`)}`,
+    ${field('নোট', html`<textarea class="input" name="notes" maxlength="1000">${t.notes || ''}</textarea>`)}
+    ${t.id && can.owner() && !S.d.leases.some(l => l.tenant_id === t.id) && !S.d.invoices.some(i => i.tenant_id === t.id) ? html`<button type="button" class="btn danger sm" data-del style="justify-self:start">ভাড়াটিয়া মুছে ফেলুন</button>` : ''}`,
     onSubmit: async v => {
       const row = { full_name: v.full_name.trim(), phone: v.phone.trim(), email: v.email.trim() || null, nid_number: v.nid_number.trim() || null, occupation: v.occupation.trim() || null,
         family_members: v.family_members ? Number(v.family_members) : null, address: v.address.trim() || null, emergency_name: v.emergency_name.trim() || null, emergency_phone: v.emergency_phone.trim() || null, notes: v.notes.trim() || null };
       const res = await run(t.id ? S.db.from('tenants').update(row).eq('id', t.id) : S.db.from('tenants').insert({ ...row, org_id: S.org.id }).select().single(), 'সংরক্ষণ হয়েছে');
       await loadAll(); if (after) after(res?.id || t.id); else route();
     } });
+  if (t.id) wireDelete(dlg, 'tenants', t.id, t.full_name);
 }
 function tenantSheet(id) {
   const t = T(id), l = leaseOfTenant(id), invs = S.d.invoices.filter(i => i.tenant_id === id && i.status !== 'void').sort((a, b) => b.period.localeCompare(a.period));
@@ -348,13 +351,14 @@ function tenantSheet(id) {
     <h3 style="margin:1.2rem 0 .3rem">ইনভয়েস</h3>
     ${invs.length ? html`<div class="table-wrap"><table class="t"><thead><tr><th>মাস</th><th>নম্বর</th><th class="r">মোট</th><th class="r">বকেয়া</th><th>অবস্থা</th></tr></thead><tbody>${invs.map(i => html`<tr class="click" data-inv="${i.id}"><td>${monthLabel(i.period)}</td><td>${i.invoice_no}</td><td class="r num">${tk(i.subtotal)}</td><td class="r num">${tk(due(i))}</td><td>${chip(invStatus(i))}</td></tr>`)}</tbody></table></div>` : html`<p class="muted">কোনো ইনভয়েস নেই।</p>`}
     ${pays.length ? html`<h3 style="margin:1.2rem 0 .3rem">রসিদ</h3><div class="list">${pays.slice(0, 8).map(p => html`<div class="list-row click" data-receipt="${p.id}"><div><div class="title">${p.receipt_no}</div><div class="sub">${dateBn(p.paid_on)} · ${LABEL.method[p.method]}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`)}</div>` : ''}`,
-    foot: html`${can.manage() ? html`<button class="btn" data-edit>তথ্য সম্পাদনা</button>${l ? html`<button class="btn danger" data-end>চুক্তি শেষ</button>` : html`<button class="btn primary" data-lease>ইউনিটে বসান</button>`}` : ''}
-      ${totalDue > 0 ? html`<a class="btn" target="_blank" rel="noopener" href="${waLink(t.phone, `প্রিয় ${t.full_name}, আপনার মোট বকেয়া ৳${totalDue}। অনুগ্রহ করে দ্রুত পরিশোধ করুন। — ${S.org.name}`)}">WhatsApp রিমাইন্ডার</a><button class="btn gold" data-pay>${icon('cash')}টাকা জমা</button>` : ''}` });
+    foot: html`${can.manage() ? html`<button class="btn" data-edit>তথ্য সম্পাদনা</button>${l ? html`<button class="btn" data-editlease>চুক্তি সম্পাদনা</button><button class="btn danger" data-end>চুক্তি শেষ</button>` : html`<button class="btn primary" data-lease>ইউনিটে বসান</button>`}` : ''}
+      ${totalDue > 0 ? html`<a class="btn" target="_blank" rel="noopener" href="${waLink(t.phone, `প্রিয় ${t.full_name}, আপনার মোট বকেয়া ৳${totalDue}। অনুগ্রহ করে দ্রুত পরিশোধ করুন। — ${S.org.name}`)}">WhatsApp রিমাইন্ডার</a><button class="btn gold" data-pay>${icon('cash')}ভাড়া আদায় করুন</button>` : ''}` });
   $$('[data-inv]', d).forEach(r => r.onclick = () => { d.close(); invoiceSheet(r.dataset.inv); });
   $$('[data-receipt]', d).forEach(r => r.onclick = () => { d.close(); receiptSheet(r.dataset.receipt); });
   $('[data-edit]', d)?.addEventListener('click', () => { d.close(); tenantEditSheet(t); });
   $('[data-lease]', d)?.addEventListener('click', () => { d.close(); leaseSheet({ tenantId: id }); });
   $('[data-end]', d)?.addEventListener('click', () => { d.close(); endLeaseSheet(l); });
+  $('[data-editlease]', d)?.addEventListener('click', () => { d.close(); leaseEditSheet(l); });
   $('[data-pay]', d)?.addEventListener('click', () => { d.close(); paymentSheet(invs.find(i => i.status !== 'paid')?.id); });
 }
 function leaseSheet({ unitId, tenantId }) {
@@ -379,6 +383,16 @@ function leaseSheet({ unitId, tenantId }) {
   const uSel = $('[name=unit_id]', d), tSel = $('[name=tenant_id]', d);
   uSel.onchange = () => { $('[name=monthly_rent]', d).value = U(uSel.value).rent_amount; };
   tSel.onchange = () => { if (tSel.value === '__new') { const u = uSel.value; d.close(); tenantEditSheet({}, newId => leaseSheet({ unitId: u, tenantId: newId })); } };
+}
+function leaseEditSheet(l) {
+  if (!guard()) return;
+  formSheet({ title: 'চুক্তি সম্পাদনা — ' + unitName(U(l.unit_id)), fields: html`<p class="small muted">নতুন ভাড়া পরের ইনভয়েস থেকে কার্যকর হবে। আগের ইনভয়েস বদলাবে না।</p>
+    <div class="grid-2">${field('মাসিক ভাড়া (৳)', html`<input class="input" name="monthly_rent" type="number" min="0" required value="${l.monthly_rent}">`)}
+      ${field('জামানত/অগ্রিম (৳)', html`<input class="input" name="security_deposit" type="number" min="0" value="${l.security_deposit}">`)}</div>
+    <div class="grid-2">${field('প্রতি মাসে ভাড়া দেওয়ার শেষ তারিখ', html`<input class="input" name="due_day" type="number" min="1" max="28" required value="${l.due_day}">`, '১ থেকে ২৮ এর মধ্যে')}
+      ${field('চুক্তি শুরুর তারিখ', html`<input class="input" name="start_date" type="date" required value="${l.start_date}">`)}</div>
+    ${field('নোট', html`<textarea class="input" name="notes" maxlength="1000">${l.notes || ''}</textarea>`)}`,
+    onSubmit: async v => { await run(S.db.from('leases').update({ monthly_rent: Number(v.monthly_rent), security_deposit: Number(v.security_deposit || 0), due_day: Number(v.due_day), start_date: v.start_date, notes: v.notes.trim() || null }).eq('id', l.id), 'চুক্তি সংরক্ষণ হয়েছে'); await refresh(); } });
 }
 function endLeaseSheet(l) {
   if (!guard()) return;
@@ -461,11 +475,11 @@ async function invoiceSheet(id) {
   const doc = invoiceDoc(i, items, t, u, pays);
   const d = openSheet({ wide: true, title: `ইনভয়েস ${i.invoice_no}`, body: html`${raw(doc)}
     ${editable ? html`<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem"><button class="btn sm" data-add-item="other">+ অতিরিক্ত চার্জ</button><button class="btn sm" data-add-item="late_fee">+ বিলম্ব ফি</button><button class="btn sm" data-add-item="discount">+ ছাড়</button></div>` : ''}
-    ${pays.length ? html`<h3 style="margin:1.2rem 0 .3rem">জমা</h3><div class="list">${pays.map(p => html`<div class="list-row click" data-receipt="${p.id}"><div><div class="title">${p.receipt_no}</div><div class="sub">${dateBn(p.paid_on)} · ${LABEL.method[p.method]}${p.reference ? ' · ' + p.reference : ''}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`)}</div>` : ''}`,
+    ${pays.length ? html`<h3 style="margin:1.2rem 0 .3rem">আদায়</h3><div class="list">${pays.map(p => html`<div class="list-row click" data-receipt="${p.id}"><div><div class="title">${p.receipt_no}</div><div class="sub">${dateBn(p.paid_on)} · ${LABEL.method[p.method]}${p.reference ? ' · ' + p.reference : ''}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`)}</div>` : ''}`,
     foot: html`${can.owner() && i.status === 'unpaid' && !pays.length ? html`<button class="btn danger" data-void style="margin-right:auto">বাতিল</button>` : ''}
       <button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>
       <a class="btn" target="_blank" rel="noopener" href="${waLink(t.phone, invoiceText(i, items, t, u))}">WhatsApp-এ পাঠান</a>
-      ${['unpaid', 'partial'].includes(i.status) ? html`<button class="btn gold" data-pay>${icon('cash')}টাকা জমা</button>` : ''}` });
+      ${['unpaid', 'partial'].includes(i.status) ? html`<button class="btn gold" data-pay>${icon('cash')}ভাড়া আদায় করুন</button>` : ''}` });
   $('[data-print]', d).onclick = () => printDoc(doc);
   $('[data-pay]', d)?.addEventListener('click', () => { d.close(); paymentSheet(id); });
   $$('[data-receipt]', d).forEach(r => r.onclick = () => { d.close(); receiptSheet(r.dataset.receipt); });
@@ -501,16 +515,20 @@ function invoiceText(i, items, t, u) {
 }
 function receiptSheet(pid) {
   const p = by(S.d.payments, pid), i = by(S.d.invoices, p.invoice_id), t = T(p.tenant_id), u = U(i.unit_id);
-  const doc = `<div class="doc">${docHead('টাকা জমার রসিদ', p.receipt_no)}
+  const doc = `<div class="doc">${docHead('টাকা প্রাপ্তির রসিদ', p.receipt_no)}
     <p>প্রাপ্তি স্বীকার করা যাচ্ছে যে <b>${esc(t.full_name)}</b> (${esc(unitName(u))}) এর কাছ থেকে <b>${esc(tk(p.amount))}</b> বুঝে পেয়েছি।</p>
     <table><tbody><tr><td>ইনভয়েস</td><td class="r">${esc(i.invoice_no)} (${esc(monthLabel(i.period))})</td></tr><tr><td>তারিখ</td><td class="r">${esc(dateBn(p.paid_on))}</td></tr>
-      <tr><td>মাধ্যম</td><td class="r">${esc(LABEL.method[p.method])}${p.reference ? ' — ' + esc(p.reference) : ''}</td></tr><tr class="total"><td>জমা</td><td class="r">${esc(tk(p.amount))}</td></tr>
+      <tr><td>মাধ্যম</td><td class="r">${esc(LABEL.method[p.method])}${p.reference ? ' — ' + esc(p.reference) : ''}</td></tr><tr class="total"><td>আদায়</td><td class="r">${esc(tk(p.amount))}</td></tr>
       <tr><td>ইনভয়েসের বাকি</td><td class="r">${esc(tk(due(i)))}</td></tr></tbody></table>
     <span class="stamp">${esc(due(i) > 0 ? 'আংশিক' : 'পরিশোধিত')}</span>
     <div class="foot"><span>স্বাক্ষর: ____________</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
-  const d = openSheet({ wide: true, title: 'রসিদ ' + p.receipt_no, body: raw(doc), foot: html`<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>
+  const d = openSheet({ wide: true, title: 'রসিদ ' + p.receipt_no, body: raw(doc), foot: html`${can.owner() ? html`<button class="btn danger" data-delpay style="margin-right:auto">ভুল পেমেন্ট মুছুন</button>` : ''}<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>
     <a class="btn primary" target="_blank" rel="noopener" href="${waLink(t.phone, `${S.org.name}\nরসিদ ${p.receipt_no}\n${t.full_name}, ${unitName(u)}\nজমা: ৳${p.amount} (${LABEL.method[p.method]})\nতারিখ: ${dateBn(p.paid_on)}\nবাকি: ৳${due(i)}\nধন্যবাদ।`)}">WhatsApp-এ রসিদ পাঠান</a>` });
   $('[data-print]', d).onclick = () => printDoc(doc);
+  $('[data-delpay]', d)?.addEventListener('click', () => { d.close(); formSheet({ title: 'ভুল পেমেন্ট মুছুন', submit: 'পেমেন্ট মুছুন', fields: html`
+    <p>${p.receipt_no} — ${tk(p.amount)} মুছে ফেললে ইনভয়েসের বকেয়া আবার ফিরে আসবে, আর আয়ের হিসাব থেকেও বাদ যাবে। মুছে ফেলা পেমেন্টের রেকর্ড অডিট লগে থেকে যাবে।</p>
+    ${field('মুছে ফেলার কারণ', html`<input class="input" name="reason" required minlength="3" maxlength="300" placeholder="যেমন: ভুল অঙ্ক লেখা হয়েছিল">`)}`,
+    onSubmit: async v => { await run(S.db.rpc('delete_payment', { p_payment: p.id, p_reason: v.reason.trim() }), 'পেমেন্ট মুছে ফেলা হয়েছে'); await refresh(); } }); });
 }
 function waLink(phone, text) { let p = String(phone || '').replace(/\D/g, ''); if (p.startsWith('0')) p = '88' + p; return `https://wa.me/${p}?text=${encodeURIComponent(text)}`; }
 
@@ -521,14 +539,14 @@ function paymentSheet(invoiceId) {
   if (!open.length) { toast('কোনো বকেয়া ইনভয়েস নেই। আগে এ মাসের ইনভয়েস তৈরি করুন।'); return; }
   const optMap = Object.fromEntries(open.map(i => [i.id, `${unitName(U(i.unit_id))} — ${T(i.tenant_id)?.full_name} — ${monthLabel(i.period)} — বকেয়া ${tk(due(i))}`]));
   const first = invoiceId && optMap[invoiceId] ? invoiceId : open[0].id;
-  const d = formSheet({ title: 'টাকা জমা নিন', submit: 'জমা করুন ও রসিদ তৈরি', fields: html`
+  const d = formSheet({ title: 'ভাড়া আদায় করুন', submit: 'আদায় করুন ও রসিদ তৈরি', fields: html`
     ${field('কোন ইনভয়েসের টাকা', html`<select class="input" name="invoice" required>${opts(optMap, first)}</select>`)}
     ${field('টাকার পরিমাণ (৳)', html`<input class="input" name="amount" type="number" min="1" step="0.01" required value="${due(by(S.d.invoices, first))}" style="font-size:1.4rem;font-weight:700">`)}
     <div class="field"><span>কীভাবে পেলেন</span><div class="seg" id="mSeg" style="width:100%">${['cash', 'bkash', 'nagad', 'rocket', 'bank'].map((k, j) => html`<button type="button" data-k="${k}" aria-pressed="${j === 0}">${LABEL.method[k]}</button>`)}</div><input type="hidden" name="method" value="cash"></div>
     <div class="grid-2">${field('ট্রানজেকশন আইডি / নোট', html`<input class="input" name="reference" maxlength="80">`)}${field('তারিখ', html`<input class="input" name="paid_on" type="date" required max="${todayISO()}" value="${todayISO()}">`)}</div>`,
     onSubmit: async v => {
       const r = await run(S.db.rpc('record_payment', { p_invoice: v.invoice, p_amount: Number(v.amount), p_method: v.method, p_reference: v.reference || null, p_paid_on: v.paid_on }));
-      toast(`জমা হয়েছে। রসিদ ${r.receipt_no}`); await loadAll(); route(); receiptSheet(r.payment_id);
+      toast(`আদায় হয়েছে। রসিদ ${r.receipt_no}`); await loadAll(); route(); receiptSheet(r.payment_id);
     } });
   const sel = $('[name=invoice]', d); sel.onchange = () => { $('[name=amount]', d).value = due(by(S.d.invoices, sel.value)); };
   $$('#mSeg button', d).forEach(b => b.onclick = () => { $$('#mSeg button', d).forEach(x => x.setAttribute('aria-pressed', x === b)); $('[name=method]', d).value = b.dataset.k; });
@@ -551,7 +569,7 @@ async function pageMoney() {
       <section class="panel"><h3 style="margin-bottom:.5rem">লেনদেন — ${monthLabel(m)}</h3>
         ${rows.length ? html`<div class="list">${rows.map(r => html`<div class="list-row ${r.payment_id ? '' : 'click'}" ${r.payment_id ? '' : raw(`data-led="${esc(r.id)}"`)}><div><div class="title">${r.category}</div><div class="sub">${dateBn(r.entry_date)}${r.property_id ? ' · ' + PR(r.property_id)?.name : ''}${r.description ? ' · ' + r.description : ''}${r.payment_id ? ' · স্বয়ংক্রিয়' : ''}</div></div>
           <div class="right"><b class="num" style="color:${r.entry_type === 'income' ? 'var(--paid)' : 'var(--ink)'}">${r.entry_type === 'income' ? '+' : '−'}${tk(r.amount)}</b></div></div>`)}</div>`
-          : emptyState('wallet', 'এ মাসে কোনো লেনদেন নেই', 'ভাড়া জমা নিলে আয় নিজে থেকেই এখানে যোগ হবে। মেরামত, বেতন, বিলের মতো খরচ হাতে যোগ করুন।')}</section>
+          : emptyState('wallet', 'এ মাসে কোনো লেনদেন নেই', 'ভাড়া আদায় করলে আয় নিজে থেকেই এখানে যোগ হবে। মেরামত, বেতন, বিলের মতো খরচ হাতে যোগ করুন।')}</section>
       <section class="panel"><h3 style="margin-bottom:.8rem">খরচের খাত</h3>${Object.keys(cats).length ? html`<div style="display:grid;gap:.7rem">${Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, v]) => html`<div><div style="display:flex;justify-content:space-between"><span>${c}</span><b class="num">${tk(v)}</b></div><div class="meter" style="background:var(--surface-2);height:8px;margin-top:.3rem"><i style="width:${v / maxC * 100}%"></i></div></div>`)}</div>` : html`<p class="muted">কোনো খরচ নেই।</p>`}</section>
     </div>`);
   wireMonth(view(), pageMoney);
@@ -625,7 +643,7 @@ async function pageMessages() {
   const { data: rows } = await S.db.from('notification_outbox').select('*').eq('org_id', S.org.id).order('created_at', { ascending: false }).limit(100);
   const T2 = { invoice_issued: 'ইনভয়েস', payment_received: 'রসিদ', due_reminder: 'বকেয়া রিমাইন্ডার', custom: 'বার্তা' };
   view().innerHTML = String(html`
-    <section class="panel"><div class="panel-head"><div><h2>স্বয়ংক্রিয় বার্তা</h2><p class="muted small">ইনভয়েস তৈরি, টাকা জমা আর বকেয়ার সময় ভাড়াটিয়াকে বার্তা যাবে।</p></div></div>
+    <section class="panel"><div class="panel-head"><div><h2>স্বয়ংক্রিয় বার্তা</h2><p class="muted small">ইনভয়েস তৈরি, ভাড়া আদায় আর বকেয়ার সময় ভাড়াটিয়াকে বার্তা যাবে।</p></div></div>
       <div class="grid-2">
         <label class="panel" style="display:flex;gap:.8rem;align-items:center;cursor:pointer"><input type="checkbox" id="sms" ${S.org.sms_enabled ? raw('checked') : ''} ${can.owner() ? '' : raw('disabled')}><span><b>SMS</b><br><span class="small muted">বাংলাদেশের যেকোনো মোবাইলে</span></span></label>
         <label class="panel" style="display:flex;gap:.8rem;align-items:center;cursor:pointer;margin-top:0"><input type="checkbox" id="wa" ${S.org.whatsapp_enabled ? raw('checked') : ''} ${can.owner() ? '' : raw('disabled')}><span><b>WhatsApp</b><br><span class="small muted">WhatsApp ব্যবহারকারীদের</span></span></label></div>
@@ -633,7 +651,7 @@ async function pageMessages() {
     <section class="panel"><div class="panel-head"><h3>বার্তার তালিকা</h3>${can.manage() ? html`<button class="btn primary" id="remind">${icon('bell')}সব বকেয়াদারকে রিমাইন্ডার</button>` : ''}</div>
       ${rows.length ? html`<div class="list">${rows.map(r => html`<div class="list-row"><div><div class="title">${T2[r.template]} · ${r.channel === 'sms' ? 'SMS' : 'WhatsApp'} · ${bnDigits(r.to_phone)}</div><div class="sub">${r.body}</div></div>
         <div class="right">${chip(r.status)}${r.status === 'queued' ? html`<a class="btn sm" target="_blank" rel="noopener" href="${waLink(r.to_phone, r.body)}">নিজে পাঠান</a>` : ''}</div></div>`)}</div>`
-        : emptyState('message', 'এখনো কোনো বার্তা নেই', 'SMS বা WhatsApp চালু করুন। এরপর ইনভয়েস তৈরি বা টাকা জমা নিলে বার্তা এখানে দেখা যাবে।')}</section>`);
+        : emptyState('message', 'এখনো কোনো বার্তা নেই', 'SMS বা WhatsApp চালু করুন। এরপর ইনভয়েস তৈরি বা ভাড়া আদায় করলে বার্তা এখানে দেখা যাবে।')}</section>`);
   const save = async (k, v) => { await run(S.db.from('organizations').update({ [k]: v }).eq('id', S.org.id), 'সংরক্ষণ হয়েছে'); S.org[k] = v; };
   $('#sms').onchange = e => save('sms_enabled', e.target.checked); $('#wa').onchange = e => save('whatsapp_enabled', e.target.checked);
   $('#remind')?.addEventListener('click', async () => { if (!guard()) return; if (!S.org.sms_enabled && !S.org.whatsapp_enabled) { toast('আগে SMS অথবা WhatsApp চালু করুন।', true); return; }
@@ -686,7 +704,7 @@ async function pageSettings() {
           ${field('ভাড়ার শেষ তারিখ (ডিফল্ট)', html`<input class="input" name="default_due_day" type="number" min="1" max="28" required value="${o.default_due_day}">`)}</div>
         ${can.owner() ? html`<button class="btn primary" style="justify-self:start">সংরক্ষণ করুন</button>` : html`<p class="muted small">শুধু মালিক এই তথ্য বদলাতে পারেন।</p>`}
       </form></section>
-    ${can.owner() ? html`<section class="panel"><div class="panel-head"><div><h2>টিম</h2><p class="muted small">ম্যানেজার সব কাজ করতে পারেন। হিসাবরক্ষক টাকা জমা ও আয়-ব্যয় লিখতে পারেন।</p></div><button class="btn primary" id="addM">${icon('plus')}সদস্য যোগ করুন</button></div>
+    ${can.owner() ? html`<section class="panel"><div class="panel-head"><div><h2>টিম</h2><p class="muted small">ম্যানেজার সব কাজ করতে পারেন। হিসাবরক্ষক ভাড়া আদায় ও আয়-ব্যয় লিখতে পারেন।</p></div><button class="btn primary" id="addM">${icon('plus')}সদস্য যোগ করুন</button></div>
       <div class="list">${mem.map(m => html`<div class="list-row"><div><div class="title">${profs.find(p => p.user_id === m.user_id)?.full_name || (m.user_id === S.user.id ? (S.user.user_metadata?.full_name || S.user.email) : 'সদস্য')}</div><div class="sub">${LABEL.role[m.role]}</div></div>
         <div class="right">${m.role !== 'owner' ? html`<button class="btn sm danger" data-rm="${m.user_id}">বাদ দিন</button>` : chip('active', 'মালিক')}</div></div>`)}</div></section>
     <section class="panel"><h2 style="margin-bottom:.4rem">ব্যাকআপ</h2><p class="muted small" style="margin-bottom:.8rem">সার্ভারে প্রতিদিন স্বয়ংক্রিয় ব্যাকআপ হয়। নিজের কাছে রাখতে চাইলে সব তথ্য এক ফাইলে ডাউনলোড করুন।</p>

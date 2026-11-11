@@ -32,6 +32,7 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
    3. `202611110003_rentora_functions.sql`
    4. `202611110004_rentora_profiles.sql`
    5. `202611110005_rentora_function_grants.sql`
+   6. `202611120001_rentora_audit_fixes.sql`
 3. **Authentication › URL Configuration**
    - Site URL: `https://rentora.hsdmj.com`
    - Redirect URLs-এ যোগ করুন: `https://rentora.hsdmj.com/**`
@@ -114,7 +115,7 @@ psql "নতুন-ডাটাবেসের-URL" -f rentora.sql
 ## পরীক্ষা চালানো (ডেভেলপারদের জন্য)
 
 ```bash
-bash scripts/run-db-tests.sh . -h localhost -p 5432   # ৯৯টি নিরাপত্তা ও হিসাবের টেস্ট
+bash scripts/run-db-tests.sh . -h localhost -p 5432   # ১০৯টি নিরাপত্তা ও হিসাবের টেস্ট
 python3 tests/smoke.py .                             # ডেমো ক্লিক-থ্রু
 ```
 প্রতিটি পুশে GitHub Actions এগুলো নিজে চালায়।

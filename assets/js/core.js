@@ -3,9 +3,54 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, COMPANY, COMPANY_URL } from './
 
 const params = new URLSearchParams(location.search);
 const demoParam = params.get('demo');
+// ---------- Language (bn default, en optional) ----------
+let langSaved = null; try { langSaved = localStorage.getItem('rentora_lang'); } catch {}
+export const LANG = langSaved === 'en' ? 'en' : 'bn';
+export function setLang(l) { try { localStorage.setItem('rentora_lang', l); } catch {} location.reload(); }
+document.documentElement.lang = LANG;
+document.documentElement.setAttribute('translate', 'no');
+
+// ---------- English translation layer ----------
+// The interface is written in Bengali. In English mode every text node and label is translated
+// as it appears (pages, dialogs, toasts, printed documents), so no screen can be missed.
+const I18N = LANG === 'en' ? await import('./i18n-en.js') : null;
+const BN_LETTER = '[\\u0980-\\u09E5\\u09F0-\\u09FF]';
+const toLatin = s => s.replace(/[\u09E6-\u09EF]/g, d => String(d.charCodeAt(0) - 0x09E6));
+let trMap = null, trRe = null;
+if (I18N) {
+  trMap = new Map(); for (const [k, v] of I18N.PHRASES) trMap.set(toLatin(k), v);
+  const keys = [...trMap.keys()].sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  trRe = new RegExp(`(?<!${BN_LETTER})(?:${keys.join('|')})(?!${BN_LETTER})`, 'g');
+}
+export function tr(s) {
+  if (!trRe || !s || !/[\u0980-\u09FF]/.test(s)) return s;
+  s = toLatin(s);
+  for (const [re, to] of I18N.RULES) s = s.replace(re, to);
+  return s.replace(trRe, m => trMap.get(m));
+}
+const TR_ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
+function trTree(root) {
+  if (root.nodeType === 3) { const t = tr(root.data); if (t !== root.data) root.data = t; return; }
+  if (root.nodeType !== 1 || root.closest?.('[data-notr], script, style')) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, { acceptNode: n => n.nodeType === 1 && (n.hasAttribute('data-notr') || n.tagName === 'SCRIPT' || n.tagName === 'STYLE') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  for (let n = root; n; n = w.nextNode()) {
+    if (n.nodeType === 3) { const t = tr(n.data); if (t !== n.data) n.data = t; }
+    else if (n.dataset?.en !== undefined && n.textContent !== n.dataset.en) n.textContent = n.dataset.en;
+    else for (const a of TR_ATTRS) { const v = n.getAttribute?.(a); if (v) { const t = tr(v); if (t !== v) n.setAttribute(a, t); } }
+  }
+}
+if (I18N) {
+  const run = () => { trTree(document.body); document.title = tr(document.title); };
+  run();
+  new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) trTree(n); }).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver(() => { const t = tr(document.title); if (t !== document.title) document.title = t; }).observe(document.querySelector('title') || document.head, { childList: true, subtree: true, characterData: true });
+}
 if (demoParam) { try { sessionStorage.setItem('rentora_demo', demoParam); } catch {} }
 let storedDemo = null; try { storedDemo = sessionStorage.getItem('rentora_demo'); } catch {}
-export const DEMO_ROLE = demoParam || storedDemo || (!SUPABASE_URL ? 'none' : null);
+// Demo mode (sample data in the browser) never runs on the live site.
+const DEV_HOST = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+export const DEMO_ALLOWED = DEV_HOST || !SUPABASE_URL;
+export const DEMO_ROLE = DEMO_ALLOWED ? (demoParam || storedDemo || (!SUPABASE_URL ? 'none' : null)) : null;
 export const IS_DEMO = !!DEMO_ROLE;
 
 let client;
@@ -40,13 +85,18 @@ export const $ = (s, el = document) => el.querySelector(s);
 export const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
 // ---------- Formatting (Bengali numerals for money and dates) ----------
-const bnNum = new Intl.NumberFormat('bn-BD', { maximumFractionDigits: 2 });
+const bnNum = new Intl.NumberFormat(LANG === 'en' ? 'en-IN' : 'bn-BD', { maximumFractionDigits: 2 });
 export const n = v => bnNum.format(Number(v || 0));
 export const tk = v => '৳' + bnNum.format(Number(v || 0));
-const BN_MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
-export const bnDigits = s => String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
-export function monthLabel(iso) { const [y, m] = String(iso).split('-'); return `${BN_MONTHS[Number(m) - 1]} ${bnDigits(y)}`; }
-export function shortMonth(iso) { const [, m] = String(iso).split('-'); return BN_MONTHS[Number(m) - 1].slice(0, 3); }
+const MONTHS = LANG === 'en'
+  ? ['January','February','March','April','May','June','July','August','September','October','November','December']
+  : ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const MONTHS_SHORT = LANG === 'en'
+  ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  : ['জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টে','অক্টো','নভে','ডিসে'];
+export const bnDigits = s => LANG === 'en' ? String(s) : String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+export function monthLabel(iso) { const [y, m] = String(iso).split('-'); return `${MONTHS[Number(m) - 1]} ${bnDigits(y)}`; }
+export function shortMonth(iso) { const [, m] = String(iso).split('-'); return MONTHS_SHORT[Number(m) - 1]; }
 export function dateBn(iso) { if (!iso) return '—'; const [y, m, d] = String(iso).slice(0, 10).split('-'); return bnDigits(`${d}/${m}/${y}`); }
 export function todayISO() { const d = new Date(Date.now() + 6 * 3600e3); return d.toISOString().slice(0, 10); } // Asia/Dhaka
 export function monthStart(iso = todayISO()) { return iso.slice(0, 7) + '-01'; }
@@ -165,6 +215,12 @@ export function demoBanner() {
   if (!IS_DEMO) return;
   const b = document.createElement('div'); b.className = 'demo-banner';
   b.textContent = 'ডেমো মোড: এখানে নমুনা তথ্য দেখানো হচ্ছে, কিছুই সংরক্ষিত হবে না।'; document.body.prepend(b);
+}
+// Language switch button (label shows the other language)
+export function langButton(cls = 'btn ghost sm') {
+  const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.setAttribute('translate', 'no');
+  b.setAttribute('data-notr', ''); b.textContent = LANG === 'en' ? 'বাংলা' : 'EN'; b.setAttribute('aria-label', LANG === 'en' ? 'বাংলায় দেখুন' : 'Switch to English');
+  b.onclick = () => setLang(LANG === 'en' ? 'bn' : 'en'); return b;
 }
 export function download(name, text, type = 'application/json') {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);

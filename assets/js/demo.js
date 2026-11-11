@@ -149,6 +149,12 @@ export function createDemoClient(role) {
       const t = db.tenants.find(x => x.id === i.tenant_id); queue(i.org_id, t.phone, 'payment_received', `প্রিয় ${t.full_name}, ৳${amt} পেয়েছি। রসিদ নং ${p.receipt_no}। ধন্যবাদ।`, i.id);
       return { payment_id: p.id, receipt_no: p.receipt_no, status: i.status, due: i.subtotal - i.paid_amount };
     },
+    delete_payment({ p_payment, p_reason }) {
+      const p = db.payments.find(x => x.id === p_payment); if (!p) throw new Error('পেমেন্ট পাওয়া যায়নি');
+      if (!memberOrgs(['owner']).includes(p.org_id)) throw new Error('এই কাজের অনুমতি নেই');
+      if (!p_reason || p_reason.trim().length < 3) throw new Error('মুছে ফেলার কারণ লিখুন');
+      db.payments = db.payments.filter(x => x !== p); db.ledger_entries = db.ledger_entries.filter(l => l.payment_id !== p.id); recalc(p.invoice_id); return null;
+    },
     void_invoice({ p_invoice, p_reason }) {
       const i = db.invoices.find(x => x.id === p_invoice);
       if (!memberOrgs(['owner']).includes(i.org_id)) throw new Error('এই কাজের অনুমতি নেই');

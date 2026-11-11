@@ -1,11 +1,11 @@
 // Super Admin (SIDDIQIYA Technology): customers, subscriptions, payment verification, plans, platform settings.
-import { getClient, exitDemo, html, raw, $, $$, n, tk, dateBn, LABEL, chip, icon, run, formSheet, confirmSheet, field, opts, initTheme, toggleTheme, poweredBy, demoBanner, bnDigits, toast } from './core.js';
+import { getClient, exitDemo, html, raw, $, $$, n, tk, dateBn, LABEL, chip, icon, run, formSheet, confirmSheet, field, opts, initTheme, toggleTheme, poweredBy, demoBanner, bnDigits, toast , langButton } from './core.js';
 
 initTheme(); demoBanner();
 const db = await getClient();
 const { data: { session } } = await db.auth.getSession();
 if (!session) location.replace('index.html');
-$('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme;
+$('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme; { const lb = langButton(); $('#themeBtn').before(lb); }
 $('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('index.html'); };
 const { data: adm } = await db.from('platform_admins').select('user_id').eq('user_id', session.user.id);
 let tab = location.hash.slice(1) || 'overview';

@@ -195,3 +195,23 @@ select pg_temp.check((select status from public.invoices where id = current_sett
 -- ending a lease frees the flat
 update public.leases set status = 'ended', end_date = public.bd_today() where tenant_id = current_setting('t.ten2')::uuid;
 select pg_temp.check((select status from public.units where id = current_setting('t.flat2')::uuid) = 'vacant', 'ended lease frees unit');
+
+-- ---------- correcting a wrong payment (audit 12 Nov 2026) ----------
+set role authenticated; select pg_temp.as_user('a0000000-0000-4000-8000-000000000001');
+select set_config('t.pay1', (select id::text from public.payments where invoice_id = current_setting('t.inv')::uuid order by receipt_no desc limit 1), false) \gset
+select pg_temp.as_user('d0000000-0000-4000-8000-000000000004');
+select pg_temp.expect_fail($q$select public.delete_payment(current_setting('t.pay1')::uuid, 'ভুল এন্ট্রি')$q$, 'accountant deletes a payment');
+select pg_temp.as_user('b0000000-0000-4000-8000-000000000002');
+select pg_temp.expect_fail($q$select public.delete_payment(current_setting('t.pay1')::uuid, 'ভুল এন্ট্রি')$q$, 'other landlord deletes a payment');
+select pg_temp.as_user('a0000000-0000-4000-8000-000000000001');
+select pg_temp.expect_fail($q$select public.delete_payment(current_setting('t.pay1')::uuid, '')$q$, 'delete payment without a reason');
+select pg_temp.expect_ok($q$select public.delete_payment(current_setting('t.pay1')::uuid, 'ভুল এন্ট্রি')$q$, 'owner deletes a wrong payment');
+select pg_temp.check((select status from public.invoices where id = current_setting('t.inv')::uuid) = 'partial', 'invoice goes back to partial');
+select pg_temp.check((select count(*) from public.ledger_entries where payment_id = current_setting('t.pay1')::uuid) = 0, 'its income line is removed');
+select pg_temp.check((select count(*) from public.audit_log where action = 'delete_payment') = 1, 'deleted payment kept in audit log');
+select pg_temp.expect_ok($q$update public.leases set monthly_rent = 15500, due_day = 5 where tenant_id = current_setting('t.ten')::uuid$q$, 'owner edits lease terms');
+-- a tenant with no lease or invoice can be deleted; one with history cannot
+with x as (insert into public.tenants(org_id,full_name,phone) values (current_setting('t.orgA')::uuid,'Temp Person','01799000000') returning id) select set_config('t.ten3', id::text, false) from x \gset
+delete from public.tenants where id = current_setting('t.ten3')::uuid;
+select pg_temp.check((select count(*) from public.tenants where id = current_setting('t.ten3')::uuid) = 0, 'owner deletes tenant without history');
+select pg_temp.expect_fail($q$delete from public.tenants where id = current_setting('t.ten')::uuid$q$, 'delete tenant with invoices');

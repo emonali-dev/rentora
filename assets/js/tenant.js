@@ -1,11 +1,11 @@
 // Tenant portal: my home, what I owe, my invoices and receipts.
-import { getClient, exitDemo, html, raw, esc, $, $$, n, tk, monthLabel, dateBn, LABEL, chip, icon, openSheet, initTheme, toggleTheme, poweredBy, demoBanner, printDoc, bnDigits, todayISO, errText } from './core.js';
+import { getClient, exitDemo, html, raw, esc, $, $$, n, tk, monthLabel, dateBn, LABEL, chip, icon, openSheet, initTheme, toggleTheme, poweredBy, demoBanner, printDoc, bnDigits, todayISO, errText , langButton } from './core.js';
 
 initTheme(); demoBanner();
 const db = await getClient();
 const { data: { session } } = await db.auth.getSession();
 if (!session) location.replace('index.html');
-$('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme;
+$('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme; { const lb = langButton(); $('#themeBtn').before(lb); }
 $('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('index.html'); };
 
 await db.rpc('link_my_tenant_records');
@@ -37,7 +37,7 @@ if (!me?.length) {
     <section class="panel" style="margin-top:1rem"><h2 style="margin-bottom:.4rem">ইনভয়েস</h2>
       ${valid.length ? html`<div class="list">${valid.map(i => html`<div class="list-row click" data-inv="${i.id}"><div><div class="title">${monthLabel(i.period)}</div><div class="sub">${i.invoice_no} · শেষ তারিখ ${dateBn(i.due_date)}</div></div>
         <div class="right"><b class="num">${tk(i.subtotal)}</b>${chip(['unpaid', 'partial'].includes(i.status) && i.due_date < todayISO() ? 'overdue' : i.status)}</div></div>`)}</div>` : html`<p class="muted">এখনো কোনো ইনভয়েস নেই।</p>`}</section>
-    <section class="panel"><h2 style="margin-bottom:.4rem">টাকা জমার রসিদ</h2>
+    <section class="panel"><h2 style="margin-bottom:.4rem">টাকা প্রাপ্তির রসিদ</h2>
       ${payments.length ? html`<div class="list">${payments.map(p => html`<div class="list-row click" data-pay="${p.id}"><div><div class="title">${p.receipt_no}</div><div class="sub">${dateBn(p.paid_on)} · ${LABEL.method[p.method]}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`)}</div>` : html`<p class="muted">এখনো কোনো রসিদ নেই।</p>`}</section>
     <p class="small muted" style="text-align:center;margin-top:1.5rem">Rentora · ${poweredBy()}</p>`);
 
@@ -54,8 +54,8 @@ if (!me?.length) {
   });
   $$('[data-pay]').forEach(r => r.onclick = () => {
     const p = payments.find(x => x.id === r.dataset.pay), i = invoices.find(x => x.id === p.invoice_id);
-    const doc = `<div class="doc">${head(O(p.org_id), 'টাকা জমার রসিদ', p.receipt_no)}<p><b>${esc(tk(p.amount))}</b> জমা হয়েছে, ${esc(dateBn(p.paid_on))} তারিখে (${esc(LABEL.method[p.method])})।</p>
-      <table><tbody><tr><td>ইনভয়েস</td><td class="r">${esc(i?.invoice_no || '')} (${esc(i ? monthLabel(i.period) : '')})</td></tr><tr class="total"><td>জমা</td><td class="r">${esc(tk(p.amount))}</td></tr></tbody></table>
+    const doc = `<div class="doc">${head(O(p.org_id), 'টাকা প্রাপ্তির রসিদ', p.receipt_no)}<p><b>${esc(tk(p.amount))}</b> আদায় হয়েছে, ${esc(dateBn(p.paid_on))} তারিখে (${esc(LABEL.method[p.method])})।</p>
+      <table><tbody><tr><td>ইনভয়েস</td><td class="r">${esc(i?.invoice_no || '')} (${esc(i ? monthLabel(i.period) : '')})</td></tr><tr class="total"><td>আদায়</td><td class="r">${esc(tk(p.amount))}</td></tr></tbody></table>
       <span class="stamp">গৃহীত</span><div class="foot"><span></span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
     const d = openSheet({ wide: true, title: 'রসিদ ' + p.receipt_no, body: raw(doc), foot: html`<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>` });
     $('[data-print]', d).onclick = () => printDoc(doc);
