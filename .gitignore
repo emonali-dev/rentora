@@ -1,0 +1,4 @@
+.DS_Store
+*.sql.gz*
+node_modules/
+__pycache__/

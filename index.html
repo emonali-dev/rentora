@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e4a3a">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://esm.sh; object-src 'none'; base-uri 'self'; form-action 'self'">
+<title>Rentora — বাড়ি ভাড়া ব্যবস্থাপনা</title>
+<meta name="description" content="Rentora: বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, ইউটিলিটি বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। Powered by SIDDIQIYA Technology.">
+<meta property="og:title" content="Rentora — বাড়ি ভাড়া ব্যবস্থাপনা">
+<meta property="og:description" content="ভাড়ার খাতা এখন মোবাইলে। কে দিল, কার বকেয়া — এক নজরে।">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/rentora.css">
+</head>
+<body>
+<div class="auth">
+  <section class="auth-art">
+    <div class="brandrow"><span class="mark">R</span><div><div class="wordmark">Rentora</div><div class="powered" id="pw1"></div></div></div>
+    <div style="display:grid;gap:1rem">
+      <h1>ভাড়ার খাতা এখন আপনার মোবাইলে</h1>
+      <p class="lead">কে ভাড়া দিল, কার বকেয়া, এ মাসে বিদ্যুৎ বিল কত — এক নজরে দেখুন। ইনভয়েস আর রসিদ তৈরি হয় এক ক্লিকে।</p>
+    </div>
+    <div class="ledger-lines" aria-label="নমুনা খাতা">
+      <div><span>২এ — করিম আহমেদ</span><span>৳১৭,১০০</span><span class="ok">পরিশোধিত</span></div>
+      <div><span>২বি — নুসরাত জাহান</span><span>৳১২,৫০০</span><span class="half">আংশিক</span></div>
+      <div><span>৩এ — রফিকুল ইসলাম</span><span>৳১৬,০২০</span><span class="no">বকেয়া</span></div>
+      <div><span>দোকান ১ — মিতু ফার্মেসি</span><span>৳১৮,০০০</span><span class="ok">পরিশোধিত</span></div>
+    </div>
+    <p class="bottom small" style="color:#cfe6da">সাপোর্ট: ০১৭৭৮৬৬২৮৩৩ · <span id="pw2"></span></p>
+  </section>
+
+  <section class="auth-form">
+    <div class="auth-card">
+      <div>
+        <h2 id="formTitle">লগইন করুন</h2>
+        <p class="muted" id="formLead">আপনার ইমেইল ও পাসওয়ার্ড দিন।</p>
+      </div>
+      <div class="role-tabs" role="group" aria-label="আপনি কে">
+        <button type="button" data-role="owner" aria-pressed="true"><b>বাড়িওয়ালা</b><span>বাড়ি ও ভাড়া পরিচালনা</span></button>
+        <button type="button" data-role="tenant" aria-pressed="false"><b>ভাড়াটিয়া</b><span>বিল দেখুন, রসিদ নিন</span></button>
+      </div>
+
+      <form class="form" id="authForm" novalidate>
+        <label class="field" id="nameField" hidden><span>আপনার নাম</span><input class="input" name="full_name" autocomplete="name" maxlength="120"></label>
+        <label class="field"><span>ইমেইল</span><input class="input" name="email" type="email" required autocomplete="email"></label>
+        <label class="field" id="passField"><span>পাসওয়ার্ড</span><input class="input" name="password" type="password" minlength="8" required autocomplete="current-password"></label>
+        <div class="form-error" hidden></div>
+        <div class="form-ok" hidden style="background:var(--paid-soft);color:var(--paid);padding:.6rem .8rem;border-radius:8px;font-weight:600"></div>
+        <button class="btn primary block" id="submitBtn" type="submit">লগইন</button>
+      </form>
+      <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap" class="small">
+        <button class="link-btn" type="button" id="modeBtn">নতুন অ্যাকাউন্ট খুলুন</button>
+        <button class="link-btn" type="button" id="forgotBtn">পাসওয়ার্ড ভুলে গেছেন?</button>
+      </div>
+      <p class="small muted" id="tenantHint" hidden>বাড়িওয়ালা Rentora-তে আপনার যে ইমেইল দিয়েছেন, সেই ইমেইল দিয়ে অ্যাকাউন্ট খুলুন। তাহলে আপনার বিল ও রসিদ নিজে থেকে দেখা যাবে।</p>
+
+      <div class="demo-box">
+        <b>সাইন আপ ছাড়াই দেখে নিন</b>
+        <span class="small">নমুনা তথ্যসহ পুরো সফটওয়্যারটি চালিয়ে দেখুন।</span>
+        <div class="row">
+          <a class="btn sm primary" href="app.html?demo=owner">বাড়িওয়ালার ডেমো</a>
+          <a class="btn sm" href="tenant.html?demo=tenant">ভাড়াটিয়ার ডেমো</a>
+          <a class="btn sm ghost" href="admin.html?demo=admin">Super Admin ডেমো</a>
+        </div>
+      </div>
+      <p class="small muted" style="text-align:center"><span id="pw3"></span></p>
+    </div>
+  </section>
+</div>
+<script type="module" src="assets/js/login.js"></script>
+</body>
+</html>

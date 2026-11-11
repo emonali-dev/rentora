@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0e4a3a">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://esm.sh; object-src 'none'; base-uri 'self'; form-action 'self'">
+<title>Rentora ড্যাশবোর্ড</title>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/rentora.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side" aria-label="মেনু">
+    <div class="brandrow"><span class="mark">R</span><div><div class="wordmark">Rentora</div><div class="powered" style="color:#cfe6da">ভাড়া ব্যবস্থাপনা</div></div></div>
+    <select class="org-switch" id="orgSwitch" aria-label="ব্যবসা নির্বাচন" hidden></select>
+    <nav id="sideNav"></nav>
+    <div class="foot"><div id="sideUser" class="small"></div><div id="sidePowered" style="color:#cfe6da"></div></div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <span class="mark mob-brand">R</span>
+      <h1 id="pageTitle">ড্যাশবোর্ড</h1>
+      <button class="btn ghost sm" id="themeBtn" aria-label="থিম বদলান"></button>
+      <button class="btn gold sm" id="payBtnTop" hidden></button>
+    </header>
+    <div id="trialBar" class="trial-bar" hidden></div>
+    <main class="content" id="view" tabindex="-1"><div class="empty"><p>লোড হচ্ছে…</p></div></main>
+  </div>
+</div>
+<nav class="bottom-nav" id="bottomNav" aria-label="মোবাইল মেনু"></nav>
+<button class="fab" id="fab" type="button"></button>
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
