@@ -23,9 +23,9 @@ const can = { manage: () => ['owner', 'manager'].includes(S.role), owner: () => 
 async function boot() {
   S.db = await getClient();
   const { data: { session } } = await S.db.auth.getSession();
-  if (!session) { location.replace('index.html'); return; }
+  if (!session) { location.replace('login.html'); return; }
   S.user = session.user;
-  S.db.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') location.replace('index.html'); });
+  S.db.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') location.replace('login.html'); });
   const { data: admin } = await S.db.from('platform_admins').select('user_id').eq('user_id', S.user.id);
   const { data: members, error } = await S.db.from('org_members').select('*').eq('user_id', S.user.id);
   if (error) { view().innerHTML = String(html`<div class="empty"><p>${errText(error)}</p></div>`); return; }
@@ -102,7 +102,7 @@ function moreSheet() {
   $$('a', d).forEach(a => a.addEventListener('click', () => d.close()));
   $('#mLogout', d).onclick = logout;
 }
-async function logout() { await S.db.auth.signOut(); exitDemo(); location.replace('index.html'); }
+async function logout() { await S.db.auth.signOut(); exitDemo(); location.replace('login.html'); }
 function writable() {
   const g = (S.settings.grace_days ?? 3) * 864e5, o = S.org;
   return (o.status === 'trial' && Date.parse(o.trial_ends_at) + g > Date.now()) || (o.status === 'active' && Date.parse(o.current_period_end) + g > Date.now());
@@ -160,7 +160,19 @@ async function pageHome() {
     return html`<button class="tile ${st}" data-unit="${u.id}" type="button"><span class="u">${u.parent_unit_id ? U(u.parent_unit_id)?.name + ' › ' : ''}${u.name}</span><span class="t">${who}</span><span class="a num">${a}</span></button>`;
   };
   const recent = [...S.d.payments].sort((a, b) => (b.paid_on + b.created_at).localeCompare(a.paid_on + a.created_at)).slice(0, 6);
+  const steps = [
+    ['বাড়ি বা মার্কেট যোগ করুন', S.d.properties.length > 0, '#property'],
+    ['ফ্ল্যাট, দোকান বা রুম যোগ করুন', S.d.units.length > 0, '#property'],
+    ['ভাড়াটিয়া বসান', S.d.leases.some(l => l.status === 'active'), '#tenants'],
+    ['প্রথম ইনভয়েস তৈরি করুন', S.d.invoices.length > 0, '#bills'],
+    ['প্রথম ভাড়া আদায় করুন', S.d.payments.length > 0, null],
+  ];
+  const doneN = steps.filter(x => x[1]).length, nextStep = steps.find(x => !x[1]);
+  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।</p></div>
+      <div class="meter" style="background:var(--surface-2);width:160px"><i style="width:${doneN / steps.length * 100}%"></i></div></div>
+    <ol class="steps-list">${steps.map(([t, ok, href]) => html`<li class="${ok ? 'done' : (nextStep && nextStep[0] === t ? 'next' : '')}">${ok ? html`<span>${t}</span>` : href ? html`<a href="${href}">${t}</a>` : html`<button type="button" class="link-btn" data-pay-first>${t}</button>`}</li>`)}</ol></section>` : '';
   view().innerHTML = String(html`
+    ${guide}
     <div class="toolbar">${monthPicker()}<span class="grow"></span>
       ${leasesNoInv.length && can.manage() ? html`<button class="btn primary" id="genBtn">${icon('receipt')}${monthLabel(m)}-এর ${n(leasesNoInv.length)}টি ইনভয়েস তৈরি করুন</button>` : ''}</div>
     <section class="ledger-hero" aria-label="এই মাসের আদায়">
@@ -192,6 +204,7 @@ async function pageHome() {
     </div>`);
   wireMonth(view(), pageHome);
   $('#genBtn')?.addEventListener('click', generateInvoices);
+  $('[data-pay-first]')?.addEventListener('click', () => paymentSheet());
   $$('[data-unit]').forEach(b => b.onclick = () => unitSheet(b.dataset.unit));
   $$('[data-receipt]').forEach(r => r.onclick = () => receiptSheet(r.dataset.receipt));
 }
@@ -341,11 +354,11 @@ function tenantSheet(id) {
   const pays = S.d.payments.filter(p => p.tenant_id === id).sort((a, b) => b.paid_on.localeCompare(a.paid_on));
   const totalDue = invs.filter(i => i.status !== 'paid').reduce((s, i) => s + due(i), 0);
   const d = openSheet({ wide: true, title: t.full_name, body: html`
-    <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="cols two">
       <dl class="kv"><dt>মোবাইল</dt><dd><a href="tel:${t.phone}">${bnDigits(t.phone)}</a></dd><dt>ইমেইল</dt><dd>${t.email || '—'}</dd><dt>NID</dt><dd>${t.nid_number ? bnDigits(t.nid_number) : '—'}</dd>
         <dt>পেশা</dt><dd>${t.occupation || '—'}</dd><dt>সদস্য</dt><dd>${t.family_members ? n(t.family_members) : '—'}</dd><dt>জরুরি</dt><dd>${t.emergency_name || '—'} ${t.emergency_phone ? bnDigits(t.emergency_phone) : ''}</dd>
         <dt>পোর্টাল</dt><dd>${t.user_id ? chip('active', 'লগইন করেছেন') : t.email ? chip('pending', 'আমন্ত্রণের অপেক্ষায়') : chip('void', 'ইমেইল নেই')}</dd></dl>
-      <div class="panel" style="background:var(--surface-2)">${l ? html`<b>${unitName(U(l.unit_id))}</b><dl class="kv small" style="margin-top:.5rem"><dt>মাসিক ভাড়া</dt><dd class="num">${tk(l.monthly_rent)}</dd><dt>জামানত</dt><dd class="num">${tk(l.security_deposit)}</dd><dt>শুরু</dt><dd>${dateBn(l.start_date)}</dd><dt>প্রতি মাসের শেষ তারিখ</dt><dd>${n(l.due_day)} তারিখ</dd></dl>`
+      <div class="panel" style="background:var(--surface-2)">${l ? html`<b>${unitName(U(l.unit_id))}</b><dl class="kv small" style="margin-top:.5rem"><dt>মাসিক ভাড়া</dt><dd class="num">${tk(l.monthly_rent)}</dd><dt>জামানত</dt><dd class="num">${tk(l.security_deposit)}</dd><dt>শুরু</dt><dd>${dateBn(l.start_date)}</dd><dt>ভাড়ার শেষ দিন</dt><dd>প্রতি মাসের ${n(l.due_day)} তারিখ</dd></dl>`
         : html`<p class="muted">এই ভাড়াটিয়া এখন কোনো ইউনিটে নেই।</p>`}
         <p style="margin-top:.8rem">মোট বকেয়া: <b class="num" style="color:${totalDue ? 'var(--due)' : 'var(--paid)'}">${tk(totalDue)}</b></p></div></div>
     <h3 style="margin:1.2rem 0 .3rem">ইনভয়েস</h3>
@@ -504,7 +517,7 @@ function invoiceDoc(i, items, t, u, pays) {
   return `<div class="doc">${docHead('ইনভয়েস', i.invoice_no)}
     <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><div><b>${esc(t.full_name)}</b><br>${esc(unitName(u))}<br>মোবাইল: ${esc(bnDigits(t.phone))}</div>
       <div style="text-align:right">মাস: <b>${esc(monthLabel(i.period))}</b><br>ইস্যু: ${esc(dateBn(i.issue_date))}<br>শেষ তারিখ: <b>${esc(dateBn(i.due_date))}</b></div></div>
-    <table><thead><tr><th>বিবরণ</th><th class="r">টাকা</th></tr></thead><tbody>${items.map(x => `<tr><td>${esc(x.description)}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}
+    <table><thead><tr><th>বিবরণ</th><th class="r">টাকা</th></tr></thead><tbody>${items.map(x => `<tr><td>${esc(bnDigits(x.description))}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}
       <tr class="total"><td>মোট</td><td class="r">${esc(tk(i.subtotal))}</td></tr><tr><td>পরিশোধিত</td><td class="r">${esc(tk(i.paid_amount))}</td></tr><tr><td><b>বকেয়া</b></td><td class="r"><b>${esc(tk(due(i)))}</b></td></tr></tbody></table>
     <span class="stamp ${i.status === 'paid' ? '' : 'unpaid'}">${esc(i.status === 'void' ? 'বাতিল' : LABEL.status[i.status])}</span>
     <div class="foot"><span>${pays.length ? 'রসিদ: ' + esc(pays.map(p => p.receipt_no).join(', ')) : ''}</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
@@ -560,7 +573,19 @@ async function pageMoney() {
   const sum = a => a.reduce((s, r) => s + Number(r.amount), 0);
   const cats = {}; exp.forEach(r => cats[r.category] = (cats[r.category] || 0) + Number(r.amount));
   const maxC = Math.max(1, ...Object.values(cats));
+  const steps = [
+    ['বাড়ি বা মার্কেট যোগ করুন', S.d.properties.length > 0, '#property'],
+    ['ফ্ল্যাট, দোকান বা রুম যোগ করুন', S.d.units.length > 0, '#property'],
+    ['ভাড়াটিয়া বসান', S.d.leases.some(l => l.status === 'active'), '#tenants'],
+    ['প্রথম ইনভয়েস তৈরি করুন', S.d.invoices.length > 0, '#bills'],
+    ['প্রথম ভাড়া আদায় করুন', S.d.payments.length > 0, null],
+  ];
+  const doneN = steps.filter(x => x[1]).length, nextStep = steps.find(x => !x[1]);
+  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।</p></div>
+      <div class="meter" style="background:var(--surface-2);width:160px"><i style="width:${doneN / steps.length * 100}%"></i></div></div>
+    <ol class="steps-list">${steps.map(([t, ok, href]) => html`<li class="${ok ? 'done' : (nextStep && nextStep[0] === t ? 'next' : '')}">${ok ? html`<span>${t}</span>` : href ? html`<a href="${href}">${t}</a>` : html`<button type="button" class="link-btn" data-pay-first>${t}</button>`}</li>`)}</ol></section>` : '';
   view().innerHTML = String(html`
+    ${guide}
     <div class="toolbar">${monthPicker()}<span class="grow"></span><button class="btn" id="csv">${icon('download')}CSV</button>
       <button class="btn" id="addInc">${icon('plus')}আয়</button><button class="btn primary" id="addExp">${icon('plus')}খরচ</button></div>
     <div class="stats"><div class="stat"><b class="num" style="color:var(--paid)">${tk(sum(inc))}</b><span>মোট আয়</span></div><div class="stat"><b class="num">${tk(sum(exp))}</b><span>মোট খরচ</span></div>
@@ -668,8 +693,11 @@ async function pagePlan() {
       <section class="panel"><div class="panel-head"><div><h2>${cur?.name_bn} প্যাকেজ</h2><p class="muted">${o.status === 'trial' ? html`ফ্রি ট্রায়াল শেষ হবে ${dateBn(o.trial_ends_at)}` : o.current_period_end ? html`মেয়াদ ${dateBn(o.current_period_end)} পর্যন্ত (${o.billing_cycle === 'yearly' ? 'বার্ষিক' : 'মাসিক'})` : ''}</p></div>${chip(writable() ? o.status : 'suspended', writable() ? undefined : 'মেয়াদ শেষ')}</div>
         <p class="small muted">ব্যবহার: ${n(S.d.units.length)}টি ইউনিট${cur?.max_units ? html` / সর্বোচ্চ ${n(cur.max_units)}টি` : ' (আনলিমিটেড)'}</p></section>
       <div class="toolbar" style="margin-top:1rem"><h3 class="grow">প্যাকেজ বেছে নিন</h3><div class="seg" id="cyc"><button type="button" data-c="monthly" aria-pressed="${cycle === 'monthly'}">মাসিক</button><button type="button" data-c="yearly" aria-pressed="${cycle === 'yearly'}">বার্ষিক (২ মাস ফ্রি)</button></div></div>
-      <div class="plans">${S.plans.map(p => html`<div class="plan ${p.code === o.plan_code ? 'current' : ''}"><h3>${p.name_bn}</h3><div class="price num">${tk(cycle === 'yearly' ? p.yearly_price : p.monthly_price)}<span class="small muted"> / ${cycle === 'yearly' ? 'বছর' : 'মাস'}</span></div>
-        <ul>${(p.features || []).map(f => html`<li>${f}</li>`)}</ul>${can.owner() ? html`<button class="btn ${p.code === o.plan_code ? 'gold' : 'primary'}" data-buy="${p.code}">${p.code === o.plan_code ? 'নবায়ন করুন' : 'এই প্যাকেজ নিন'}</button>` : ''}</div>`)}</div>
+      <p class="small muted" style="margin:.2rem 0 .8rem">স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না। মেয়াদ শেষের আগে আপনাকে মনে করিয়ে দেওয়া হবে, নবায়ন করবেন নিজে।</p>
+      <div class="plans">${S.plans.map(p => html`<div class="plan ${p.code === o.plan_code ? 'current' : ''} ${p.code === 'standard' ? 'rec' : ''}">${p.code === 'standard' ? html`<span class="plan-badge">প্রস্তাবিত</span>` : ''}<h3>${p.name_bn}</h3><div class="price num">${tk(cycle === 'yearly' ? p.yearly_price : p.monthly_price)}<span class="small muted"> / ${cycle === 'yearly' ? 'বছর' : 'মাস'}</span></div>
+        <p class="small" style="color:var(--paid);font-weight:600">${cycle === 'yearly' && p.monthly_price * 12 > p.yearly_price ? html`বছরে ${tk(p.monthly_price * 12 - p.yearly_price)} সাশ্রয়` : html`দিনে মাত্র ${tk(Math.ceil(p.monthly_price / 30))}`}</p>
+        ${p.max_units && S.d.units.length > p.max_units ? html`<p class="small" style="color:var(--due)">আপনার ${n(S.d.units.length)}টি ইউনিট আছে, এই প্যাকেজে সর্বোচ্চ ${n(p.max_units)}টি</p>` : ''}
+        <ul>${(p.features || []).map(f => html`<li>${f}</li>`)}</ul>${can.owner() ? html`<button class="btn ${p.code === 'standard' ? 'gold' : 'primary'}" data-buy="${p.code}">${p.code === o.plan_code && o.status === 'active' ? 'নবায়ন করুন' : 'এই প্যাকেজ নিন'}</button>` : ''}</div>`)}</div>
       ${hist.length ? html`<section class="panel" style="margin-top:1rem"><h3 style="margin-bottom:.5rem">পেমেন্টের ইতিহাস</h3><div class="list">${hist.map(h => html`<div class="list-row"><div><div class="title">${S.plans.find(p => p.code === h.plan_code)?.name_bn} · ${h.billing_cycle === 'yearly' ? 'বার্ষিক' : 'মাসিক'}</div><div class="sub">${LABEL.method[h.method]} · ${h.trx_id} · ${dateBn(h.created_at)}</div></div><div class="right"><b class="num">${tk(h.amount)}</b>${chip(h.status)}</div></div>`)}</div></section>` : ''}`);
     $$('#cyc button').forEach(b => b.onclick = () => { cycle = b.dataset.c; draw(); });
     $$('[data-buy]').forEach(b => b.onclick = () => buySheet(b.dataset.buy, cycle));
@@ -684,10 +712,11 @@ function buySheet(code, cycle) {
   if (!Object.keys(methods).length) { toast(`পেমেন্ট নম্বর এখনো সেট করা হয়নি। ${st.support_phone || ''} নম্বরে যোগাযোগ করুন।`, true); return; }
   const d = formSheet({ title: `${p.name_bn} — ${cycle === 'yearly' ? 'বার্ষিক' : 'মাসিক'}`, submit: 'পেমেন্ট জমা দিন', fields: html`
     <div class="panel" style="background:var(--gold-soft);border-color:var(--gold)"><b>ধাপ ১:</b> নিচের নম্বরে <b class="num">${tk(amt)}</b> "Send Money" করুন।
-      <dl class="kv" style="margin-top:.5rem">${Object.entries(nums).filter(([, v]) => v).map(([k, v]) => html`<dt>${LABEL.method[k]}</dt><dd class="num">${bnDigits(v)}</dd>`)}${st.bank_details ? html`<dt>ব্যাংক</dt><dd>${st.bank_details}</dd>` : ''}</dl></div>
+      <dl class="kv" style="margin-top:.5rem">${Object.entries(nums).filter(([, v]) => v).map(([k, v]) => html`<dt>${LABEL.method[k]}</dt><dd class="num" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">${bnDigits(v)} <button type="button" class="btn sm" data-copy="${v}">কপি</button></dd>`)}${st.bank_details ? html`<dt>ব্যাংক</dt><dd>${st.bank_details}</dd>` : ''}</dl></div>
     <p><b>ধাপ ২:</b> যে মাধ্যমে পাঠিয়েছেন আর ট্রানজেকশন আইডি দিন। যাচাইয়ের পর সাবস্ক্রিপশন চালু হবে, সাধারণত কয়েক ঘণ্টার মধ্যে।</p>
     <div class="grid-2">${field('মাধ্যম', html`<select class="input" name="method">${opts(methods)}</select>`)}${field('ট্রানজেকশন আইডি', html`<input class="input" name="trx" required pattern="[A-Za-z0-9\\-]{6,40}" placeholder="যেমন: 8N7A6B5C4D">`)}</div>`,
     onSubmit: async v => { await run(S.db.rpc('submit_subscription_payment', { p_org: S.org.id, p_plan: code, p_cycle: cycle, p_method: v.method, p_trx: v.trx }), 'পেমেন্ট জমা হয়েছে। যাচাইয়ের পর সাবস্ক্রিপশন চালু হবে।'); pagePlan(); } });
+  $$('[data-copy]', d).forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('নম্বর কপি হয়েছে'); } catch { toast(b.dataset.copy); } });
 }
 
 // ---------------- Settings ----------------
@@ -707,7 +736,7 @@ async function pageSettings() {
     ${can.owner() ? html`<section class="panel"><div class="panel-head"><div><h2>টিম</h2><p class="muted small">ম্যানেজার সব কাজ করতে পারেন। হিসাবরক্ষক ভাড়া আদায় ও আয়-ব্যয় লিখতে পারেন।</p></div><button class="btn primary" id="addM">${icon('plus')}সদস্য যোগ করুন</button></div>
       <div class="list">${mem.map(m => html`<div class="list-row"><div><div class="title">${profs.find(p => p.user_id === m.user_id)?.full_name || (m.user_id === S.user.id ? (S.user.user_metadata?.full_name || S.user.email) : 'সদস্য')}</div><div class="sub">${LABEL.role[m.role]}</div></div>
         <div class="right">${m.role !== 'owner' ? html`<button class="btn sm danger" data-rm="${m.user_id}">বাদ দিন</button>` : chip('active', 'মালিক')}</div></div>`)}</div></section>
-    <section class="panel"><h2 style="margin-bottom:.4rem">ব্যাকআপ</h2><p class="muted small" style="margin-bottom:.8rem">সার্ভারে প্রতিদিন স্বয়ংক্রিয় ব্যাকআপ হয়। নিজের কাছে রাখতে চাইলে সব তথ্য এক ফাইলে ডাউনলোড করুন।</p>
+    <section class="panel"><h2 style="margin-bottom:.4rem">ব্যাকআপ</h2><p class="muted small" style="margin-bottom:.8rem">নিজের কাছে একটি কপি রাখতে আপনার সব তথ্য এক ফাইলে ডাউনলোড করুন। মাঝে মাঝে ডাউনলোড করে রাখা ভালো।</p>
       <button class="btn" id="exp">${icon('download')}সব তথ্য ডাউনলোড (JSON)</button></section>` : ''}
     <section class="panel"><h2 style="margin-bottom:.8rem">আমার অ্যাকাউন্ট</h2>
       <dl class="kv"><dt>ইমেইল</dt><dd>${S.user.email}</dd><dt>ভূমিকা</dt><dd>${LABEL.role[S.role]}</dd></dl>

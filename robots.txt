@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /$
 Allow: /index.html
+Allow: /login.html
 Disallow: /app.html
 Disallow: /tenant.html
 Disallow: /admin.html
+Sitemap: https://rentora.hsdmj.com/sitemap.xml

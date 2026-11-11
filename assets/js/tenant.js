@@ -4,9 +4,9 @@ import { getClient, exitDemo, html, raw, esc, $, $$, n, tk, monthLabel, dateBn, 
 initTheme(); demoBanner();
 const db = await getClient();
 const { data: { session } } = await db.auth.getSession();
-if (!session) location.replace('index.html');
+if (!session) location.replace('login.html');
 $('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme; { const lb = langButton(); $('#themeBtn').before(lb); }
-$('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('index.html'); };
+$('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('login.html'); };
 
 await db.rpc('link_my_tenant_records');
 const uid = session.user.id;
@@ -47,7 +47,7 @@ if (!me?.length) {
     const { data: items, error } = await db.from('invoice_items').select('*').eq('invoice_id', i.id).order('created_at');
     if (error) return alertSheet(errText(error));
     const doc = `<div class="doc">${head(O(i.org_id), 'ইনভয়েস', i.invoice_no)}<div>${esc(me.find(t => t.id === i.tenant_id)?.full_name)} — ${esc(place(U(i.unit_id)))}<br>মাস: <b>${esc(monthLabel(i.period))}</b> · শেষ তারিখ: <b>${esc(dateBn(i.due_date))}</b></div>
-      <table><tbody>${items.map(x => `<tr><td>${esc(x.description)}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(i.subtotal))}</td></tr><tr><td>পরিশোধিত</td><td class="r">${esc(tk(i.paid_amount))}</td></tr><tr><td><b>বকেয়া</b></td><td class="r"><b>${esc(tk(due(i)))}</b></td></tr></tbody></table>
+      <table><tbody>${items.map(x => `<tr><td>${esc(bnDigits(x.description))}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(i.subtotal))}</td></tr><tr><td>পরিশোধিত</td><td class="r">${esc(tk(i.paid_amount))}</td></tr><tr><td><b>বকেয়া</b></td><td class="r"><b>${esc(tk(due(i)))}</b></td></tr></tbody></table>
       <span class="stamp ${i.status === 'paid' ? '' : 'unpaid'}">${esc(LABEL.status[i.status])}</span><div class="foot"><span></span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
     const d = openSheet({ wide: true, title: 'ইনভয়েস ' + i.invoice_no, body: raw(doc), foot: html`<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>` });
     $('[data-print]', d).onclick = () => printDoc(doc);

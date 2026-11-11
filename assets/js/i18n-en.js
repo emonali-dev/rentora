@@ -16,6 +16,7 @@ export const RULES = [
   [/বকেয়ার \(৳([\d,.]+)\) চেয়ে বেশি টাকা নেওয়া যাবে না/g, 'The amount cannot be more than the due (৳$1)'],
   [/আপনার প্যাকেজে সর্বোচ্চ (\d+) টি ইউনিট রাখা যায়। প্যাকেজ আপগ্রেড করুন।/g, 'Your package allows up to $1 units. Please upgrade.'],
   [/প্রতি মাসের (\d+) তারিখের মধ্যে/g, 'due by day $1 of each month'],
+  [/প্রতি মাসের (\d+) তারিখ/g, 'Day $1 of each month'],
   [/(\d+) তারিখ(?![ঀ-৥ৰ-৿])/g, 'day $1'],
   [/তলা (\S+) ·/g, 'Floor $1 ·'],
   [/(\d+) তলা/g, '$1 floors'],
@@ -279,4 +280,56 @@ export const PHRASES = [
 ];
 
 // Words used in more than one place: the wording that reads right everywhere wins.
-PHRASES.push(['আদায় করুন', 'Collect'], ['ভাড়া আদায়', 'Rent collected'], ['ভাড়া আদায় করুন', 'Collect rent'], ['ভাড়াটিয়া', 'Tenants'], ['মোট আয়', 'Total income'], ['লগইন করুন', 'Log in']);
+PHRASES.push(['ভাড়ার শেষ দিন', 'Rent due day'], ['আদায় করুন', 'Collect'], ['ভাড়া আদায়', 'Rent collected'], ['ভাড়া আদায় করুন', 'Collect rent'], ['ভাড়াটিয়া', 'Tenants'], ['মোট আয়', 'Total income'], ['লগইন করুন', 'Log in']);
+
+// Home page
+PHRASES.push(
+  ['পাতার অংশ', 'Page sections'], ['সুবিধা', 'Features'], ['দাম', 'Pricing'], ['প্রশ্ন-উত্তর', 'FAQ'], ['ফ্রি শুরু করুন', 'Start free'],
+  ['কে ভাড়া দিল, কার বকেয়া, এ মাসে বিদ্যুৎ বিল কত — এক নজরে দেখুন। এক ক্লিকে ইনভয়েস, সাথে সাথে রসিদ। খাতা-কলম আর হিসাবের ঝামেলা শেষ।', 'Who has paid, who owes, what this month’s electricity bill is — see it at a glance. Invoices in one click, receipts instantly. No more ledgers and manual sums.'],
+  ['১৪ দিন ফ্রি ব্যবহার করুন', 'Try it free for 14 days'], ['কীভাবে কাজ করে', 'How it works'], ['কোনো কার্ড লাগবে না', 'No card needed'], ['বাংলা ও English', 'Bangla & English'],
+  ['মোবাইল, ট্যাব ও কম্পিউটারে', 'Phone, tablet & computer'], ['Rentora ড্যাশবোর্ডের নমুনা ছবি', 'Sample picture of the Rentora dashboard'], ['নভেম্বরে আদায় হয়েছে', 'Collected in November'],
+  ['নমুনা ছবি', 'Sample picture'], ['খাতা-কলমের ঝামেলা, এক জায়গায় সমাধান', 'Every ledger headache, solved in one place'], ['খাতায় হিসাব', 'With a paper ledger'], ['Rentora-তে', 'With Rentora'],
+  ['মাস শেষে কে দিল, কে দিল না — খাতা উল্টে খুঁজতে হয়', 'At month end you page through the ledger to see who paid'],
+  ['বিদ্যুৎ বিল হাতে হিসাব, ভুলের ভয়', 'Electricity bills worked out by hand, with mistakes'], ['রসিদ চাইলে হাতে লিখে দিতে হয়', 'Receipts written by hand on request'],
+  ['বছরে কত আয়, কত খরচ — জানা কঠিন', 'Hard to know the year’s income and expenses'], ['প্রতিটি ফ্ল্যাটের অবস্থা রঙে রঙে, এক নজরে', 'Every flat’s status in colour, at a glance'],
+  ['মিটার রিডিং দিলেই বিল নিজে হিসাব হয়', 'Enter the meter reading and the bill is calculated'], ['টাকা নিলেই রসিদ — প্রিন্ট বা WhatsApp', 'A receipt the moment you collect — print or WhatsApp'],
+  ['মাসভিত্তিক লাভ-ক্ষতি রিপোর্ট, PDF ও CSV', 'Monthly profit & loss report, PDF and CSV'], ['বাড়িওয়ালার যা যা দরকার, সব এক অ্যাপে', 'Everything a landlord needs, in one app'],
+  ['ভাড়ার খাতা এক নজরে', 'The rent ledger at a glance'], ['প্রতিটি ফ্ল্যাট ও দোকানের এ মাসের অবস্থা রঙে দেখুন — পরিশোধিত, আংশিক, বকেয়া বা খালি।', 'See every flat and shop this month in colour — paid, partial, due or vacant.'],
+  ['এক ক্লিকে মাসিক ইনভয়েস', 'Monthly invoices in one click'], ['সব চলমান চুক্তির ইনভয়েস একসাথে তৈরি হয়, বিদ্যুৎ, গ্যাস, পানি ও সার্ভিস চার্জসহ।', 'Invoices for every active lease at once, with electricity, gas, water and service charges.'],
+  ['সাথে সাথে রসিদ', 'Instant receipts'], ['বিকাশ, নগদ, ব্যাংক বা হাতে টাকা — আদায় করলেই নম্বরসহ রসিদ, প্রিন্ট বা WhatsApp-এ পাঠান।', 'bKash, Nagad, bank or cash — every collection gets a numbered receipt to print or send on WhatsApp.'],
+  ['বকেয়া রিমাইন্ডার', 'Due reminders'], ['কার কত দিনের বকেয়া দেখুন, এক ক্লিকে সবাইকে মনে করিয়ে দিন।', 'See who owes and for how long, and remind everyone in one click.'],
+  ['আয়-ব্যয় ও লাভ-ক্ষতি', 'Income, expenses & profit'], ['ভাড়ার আয় নিজে যোগ হয়। খরচ লিখুন, মাসভিত্তিক ও সম্পত্তিভিত্তিক লাভ দেখুন।', 'Rent income is added for you. Record expenses and see profit by month and by property.'],
+  ['ভাড়াটিয়া নিজের মোবাইলে বিল ও রসিদ দেখতে পান। বারবার ফোন করার ঝামেলা কমে।', 'Tenants see their bills and receipts on their own phone — fewer calls for you.'],
+  ['সব ধরনের সম্পত্তি', 'Every kind of property'], ['বাসা, মেস, মার্কেট, অফিস — বাড়ি › ভবন › ফ্ল্যাট/দোকান › রুম পর্যন্ত সাজান।', 'Homes, messes, markets, offices — organised as House › Building › Flat/Shop › Room.'],
+  ['টিম ও নিরাপত্তা', 'Team & security'], ['ম্যানেজার ও হিসাবরক্ষককে যুক্ত করুন, প্রত্যেকের আলাদা অনুমতি।', 'Add managers and accountants, each with their own permissions.'],
+  ['১০ মিনিটে শুরু করুন', 'Get started in 10 minutes'], ['অ্যাকাউন্ট খুলুন', 'Create an account'], ['ইমেইল দিয়ে সাইন আপ করুন। ১৪ দিন সবকিছু ফ্রি।', 'Sign up with your email. Everything is free for 14 days.'],
+  ['বাড়ি ও ফ্ল্যাট যোগ করুন', 'Add houses and flats'], ['বাড়ি › ভবন › ফ্ল্যাট/দোকান › রুম — যেভাবে আপনার সম্পত্তি সাজানো।', 'House › Building › Flat/Shop › Room — the way your property is laid out.'],
+  ['নাম, মোবাইল, ভাড়া আর জামানত লিখে চুক্তি শুরু করুন।', 'Enter name, mobile, rent and deposit to start the lease.'], ['ইনভয়েস দিন, ভাড়া তুলুন', 'Invoice and collect'],
+  ['মাসের শুরুতে এক ক্লিকে সব ইনভয়েস। টাকা পেলেই রসিদ।', 'All invoices in one click at the start of the month. A receipt as soon as you’re paid.'],
+  ['সহজ দাম, লুকানো কোনো খরচ নেই', 'Simple prices, no hidden costs'],
+  ['১৪ দিন সব সুবিধা ফ্রি। তারপর আপনার বাড়ির মাপমতো প্যাকেজ বেছে নিন। স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না।', 'All features free for 14 days. Then choose the package that fits your property. Nothing is ever charged automatically.'],
+  ['বার্ষিক — ২ মাস ফ্রি', 'Yearly — 2 months free'], ['প্রস্তাবিত', 'Recommended'], ['ছোট বাড়ি বা মেসের জন্য', 'For a small house or mess'], ['বেশিরভাগ বাড়িওয়ালার জন্য', 'For most landlords'],
+  ['বড় বাড়ি, মার্কেট ও একাধিক ভবন', 'Large houses, markets and several buildings'], ['সাশ্রয়', 'saved'], ['দিনে মাত্র', 'Only per day:'], ['১৪ দিন ফ্রি শুরু করুন', 'Start 14 days free'],
+  ['পেমেন্ট: বিকাশ ও নগদ', 'Payment: bKash and Nagad'], ['আপনার হিসাব শুধু আপনার', 'Your accounts are yours alone'],
+  ['প্রতিটি বাড়িওয়ালার তথ্য সম্পূর্ণ আলাদা রাখা হয়। অন্য কোনো বাড়িওয়ালা আপনার তথ্য দেখতে পারেন না, আর ভাড়াটিয়া দেখেন শুধু নিজের বিল ও রসিদ।', 'Every landlord’s data is kept completely separate. No other landlord can see yours, and tenants see only their own bills and receipts.'],
+  ['নিরাপদ এনক্রিপ্টেড সংযোগ (HTTPS', 'Secure encrypted connection (HTTPS'], ['মালিক, ম্যানেজার ও হিসাবরক্ষকের আলাদা অনুমতি', 'Separate permissions for owner, manager and accountant'],
+  ['প্রতিটি পরিবর্তনের রেকর্ড থাকে', 'Every change is recorded'], ['যেকোনো সময় নিজের সব তথ্য ডাউনলোড', 'Download all your data at any time'], ['সাধারণ প্রশ্ন', 'Frequently asked questions'],
+  ['ফ্রি ট্রায়ালে কী কী পাব', 'What do I get in the free trial'], ['১৪ দিন সব সুবিধা ফ্রি — ইনভয়েস, রসিদ, ইউটিলিটি বিল, রিপোর্ট সব। কোনো কার্ড বা অগ্রিম টাকা লাগবে না।', 'Every feature free for 14 days — invoices, receipts, utility bills, reports. No card or advance payment.'],
+  ['ট্রায়াল শেষে কী হবে', 'What happens when the trial ends'], ['আপনার সব তথ্য থেকে যাবে। পছন্দের প্যাকেজ নিলে আগের মতোই কাজ চালিয়ে যেতে পারবেন। না নিলেও তথ্য দেখতে পারবেন।', 'All your data stays. Choose a package to keep working as before. Even without one, you can still view your data.'],
+  ['কীভাবে টাকা দেব', 'How do I pay'], ['বিকাশ বা নগদে Send Money করে অ্যাপে ট্রানজেকশন আইডি দিন। যাচাইয়ের পর সাবস্ক্রিপশন চালু হয়। স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না।', 'Send Money by bKash or Nagad and enter the transaction ID in the app. Your subscription starts after verification. Nothing is charged automatically.'],
+  ['ভাড়াটিয়ারা কি নিজের বিল দেখতে পারবেন', 'Can tenants see their own bills'], ['হ্যাঁ। ভাড়াটিয়ার ইমেইল দিলে তিনি নিজের অ্যাকাউন্টে লগইন করে নিজের ইনভয়েস, বকেয়া ও রসিদ দেখতে পারবেন।', 'Yes. Add the tenant’s email and they can log in to see their own invoices, dues and receipts.'],
+  ['মোবাইলে কি অ্যাপের মতো চালানো যায়', 'Can I use it like an app on my phone'], ['হ্যাঁ। ফোনের ব্রাউজারে Rentora খুলে "Add to Home Screen" করলে অ্যাপের মতো আইকনসহ খুলবে। iPhone ও Android দুটোতেই।', 'Yes. Open Rentora in your phone’s browser and choose "Add to Home Screen" — it opens like an app with its own icon, on iPhone and Android.'],
+  ['একাধিক বাড়ি বা মার্কেট রাখা যাবে', 'Can I manage several houses or markets'], ['যাবে। প্রতিটি সম্পত্তিতে একাধিক ভবন, ফ্ল্যাট, দোকান ও রুম রাখতে পারবেন। প্যাকেজ অনুযায়ী মোট ইউনিটের সীমা থাকে।', 'Yes. Each property can have several buildings, flats, shops and rooms. Your package sets the total number of units.'],
+  ['পরে প্যাকেজ বদলানো যাবে', 'Can I change package later'], ['যাবে। যেকোনো সময় বড় বা ছোট প্যাকেজ নিতে পারবেন।', 'Yes. Move to a larger or smaller package at any time.'],
+  ['এ মাসের ভাড়া Rentora দিয়ে তুলুন', 'Collect this month’s rent with Rentora'], ['আজই শুরু করুন — ১৪ দিন সম্পূর্ণ ফ্রি।', 'Start today — 14 days completely free.'], ['ফ্রি অ্যাকাউন্ট খুলুন', 'Create a free account'],
+  ['ভাড়াটিয়া?', 'Tenant?'], ['এখানে লগইন করুন', 'Log in here'], ['সাপোর্ট (WhatsApp', 'Support (WhatsApp'], ['অফিস', 'Office'], ['নমপেন, কম্বোডিয়া · ঢাকা, বাংলাদেশ', 'Phnom Penh, Cambodia · Dhaka, Bangladesh'],
+  ['বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, বিদ্যুৎ-গ্যাস-পানির বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। ১৪ দিন ফ্রি। Powered by SIDDIQIYA Technology', 'Simple software for landlords — rent, dues, utility bills, invoices and receipts. 14 days free. Powered by SIDDIQIYA Technology'],
+  ['লগইন — Rentora', 'Log in — Rentora'],
+  // dashboard additions
+  ['শুরু করার ধাপ', 'Getting started'], ['বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।', 'finish the rest and Rentora is fully set up.'], ['এর মধ্যে', 'of'], ['সম্পন্ন —', 'done —'],
+  ['বাড়ি বা মার্কেট যোগ করুন', 'Add a house or market'], ['ফ্ল্যাট, দোকান বা রুম যোগ করুন', 'Add flats, shops or rooms'], ['প্রথম ইনভয়েস তৈরি করুন', 'Create your first invoice'], ['প্রথম ভাড়া আদায় করুন', 'Collect your first rent'],
+  ['স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না। মেয়াদ শেষের আগে আপনাকে মনে করিয়ে দেওয়া হবে, নবায়ন করবেন নিজে।', 'Nothing is charged automatically. You’ll be reminded before your period ends and renew it yourself.'],
+  ['বছরে', 'Per year'], ['কপি', 'Copy'], ['নম্বর কপি হয়েছে', 'Number copied'], ['আপনার', 'You have'], ['এই প্যাকেজে সর্বোচ্চ', 'this package allows up to'],
+  ['নিজের কাছে একটি কপি রাখতে আপনার সব তথ্য এক ফাইলে ডাউনলোড করুন। মাঝে মাঝে ডাউনলোড করে রাখা ভালো।', 'Keep your own copy: download all your data as one file. It’s good to do this now and then.'],
+);
+RULES.unshift([/(\d+)টির মধ্যে (\d+)টি সম্পন্ন — /g, '$2 of $1 done — ']);

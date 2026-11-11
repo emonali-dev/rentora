@@ -59,7 +59,7 @@ function seed() {
 
 export function createDemoClient(role) {
   const db = seed();
-  const user = USERS[role] || null;
+  const user = USERS[role === 'owner-new' ? 'owner' : role] || null;
   let session = user ? { user: { id: user.id, email: user.email, email_confirmed_at: now(), user_metadata: { full_name: user.name } }, access_token: 'demo' } : null;
   const listeners = [];
   const me = () => session?.user?.id;
@@ -298,6 +298,7 @@ export function createDemoClient(role) {
     return api;
   }
 
+  if (role === 'owner-new') { db.org_members = [{ org_id: 'org-3', user_id: USERS.owner.id, role: 'owner' }]; Object.assign(db.organizations.find(o => o.id === 'org-3'), { name: 'নতুন বাড়িওয়ালা', status: 'trial', trial_ends_at: addD(today(), 14) + 'T00:00:00Z' }); }
   return {
     demo: true,
     from: query,

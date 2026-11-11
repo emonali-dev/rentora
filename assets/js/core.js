@@ -25,6 +25,8 @@ if (I18N) {
 export function tr(s) {
   if (!trRe || !s || !/[\u0980-\u09FF]/.test(s)) return s;
   s = toLatin(s);
+  const core = s.trim(), whole = trMap.get(core) ?? trMap.get(core.replace(/[।?]$/, ''));
+  if (whole !== undefined) return s.replace(core, whole + (trMap.has(core) ? '' : (core.endsWith('?') ? '?' : '.')));
   for (const [re, to] of I18N.RULES) s = s.replace(re, to);
   return s.replace(trRe, m => trMap.get(m));
 }
@@ -42,7 +44,10 @@ function trTree(root) {
 if (I18N) {
   const run = () => { trTree(document.body); document.title = tr(document.title); };
   run();
-  new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) trTree(n); }).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver(ms => { for (const m of ms) {
+    if (m.type === 'attributes') { const v = m.target.getAttribute(m.attributeName); const t = tr(v); if (v && t !== v) m.target.setAttribute(m.attributeName, t); }
+    else for (const n of m.addedNodes) trTree(n);
+  } }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: TR_ATTRS });
   new MutationObserver(() => { const t = tr(document.title); if (t !== document.title) document.title = t; }).observe(document.querySelector('title') || document.head, { childList: true, subtree: true, characterData: true });
 }
 if (demoParam) { try { sessionStorage.setItem('rentora_demo', demoParam); } catch {} }

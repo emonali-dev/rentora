@@ -2,30 +2,30 @@
    Concept: a landlord's rent ledger (ভাড়ার খাতা). Ledger green + brand gold on a cool paper ground.
    Desktop: green sidebar + content. Phone: app bar, bottom tabs, one central "টাকা জমা" action. */
 :root {
-  --paper: #f3f6f2; --surface: #ffffff; --surface-2: #eef3ef; --ink: #10231b; --muted: #5a6b63; --line: #dbe4dd;
+  --paper: #f3f6f2; --surface: #ffffff; --surface-2: #eef3ef; --ink: #10231b; --muted: #4b5d55; --line: #dbe4dd;
   --brand: #0e4a3a; --brand-ink: #ffffff; --brand-soft: #e1efe8; --gold: #c9971f; --gold-soft: #f8edcf;
   --paid: #1d8456; --paid-soft: #dcf1e5; --partial: #b26b00; --partial-soft: #fbecd2; --due: #c03a28; --due-soft: #fbe2dd;
   --vacant: #7c8a84; --vacant-soft: #e9eeeb; --focus: #c9971f;
   --shadow: 0 1px 2px rgba(16,35,27,.06), 0 8px 24px rgba(16,35,27,.06);
-  --font-display: "Anek Bangla", "Hind Siliguri", "Noto Sans Bengali", "FreeSans", system-ui, sans-serif;
-  --font-body: "Hind Siliguri", "Noto Sans Bengali", "FreeSans", system-ui, sans-serif;
+  --font-display: "Anek Bangla", "Noto Sans Bengali", "Hind Siliguri", "FreeSans", system-ui, sans-serif;
+  --font-body: "Noto Sans Bengali", "Hind Siliguri", "FreeSans", system-ui, sans-serif;
   --r-lg: 18px; --r-md: 12px; --r-sm: 8px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper: #0c1512; --surface: #13201b; --surface-2: #182822; --ink: #e6efe9; --muted: #9bb0a6; --line: #253a31;
+  --paper: #0c1512; --surface: #13201b; --surface-2: #182822; --ink: #e6efe9; --muted: #aec2b8; --line: #253a31;
   --brand: #1f7a5f; --brand-ink: #ffffff; --brand-soft: #173a2f; --gold: #e2b33e; --gold-soft: #3a3016;
   --paid: #45c486; --paid-soft: #17392a; --partial: #e9a43c; --partial-soft: #3b2c12; --due: #f07a64; --due-soft: #42211b;
   --vacant: #8fa29a; --vacant-soft: #1f2c27; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25); color-scheme: dark; } }
 :root[data-theme="dark"] {
-  --paper: #0c1512; --surface: #13201b; --surface-2: #182822; --ink: #e6efe9; --muted: #9bb0a6; --line: #253a31;
+  --paper: #0c1512; --surface: #13201b; --surface-2: #182822; --ink: #e6efe9; --muted: #aec2b8; --line: #253a31;
   --brand: #1f7a5f; --brand-ink: #ffffff; --brand-soft: #173a2f; --gold: #e2b33e; --gold-soft: #3a3016;
   --paid: #45c486; --paid-soft: #17392a; --partial: #e9a43c; --partial-soft: #3b2c12; --due: #f07a64; --due-soft: #42211b;
   --vacant: #8fa29a; --vacant-soft: #1f2c27; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25); color-scheme: dark; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.25; margin: 0; font-weight: 650; text-wrap: balance; }
 h1 { font-size: 1.9rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.12rem; }
 p { margin: 0; }
@@ -291,8 +291,8 @@ dialog.sheet.wide { width: min(860px, calc(100vw - 32px)); }
 }
 .link-btn { background: none; border: 0; padding: 0; color: var(--brand); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 :root[data-theme="dark"] .link-btn { color: var(--gold); }
-.kv { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; }
-.kv dt { color: var(--muted); } .kv dd { margin: 0; font-weight: 600; }
+.kv { display: grid; grid-template-columns: minmax(5.5rem, max-content) minmax(0, 1fr); gap: .55rem 1rem; align-items: baseline; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
 .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
 .plan { border: 1.5px solid var(--line); border-radius: var(--r-lg); padding: 1.2rem; display: grid; gap: .6rem; background: var(--surface); align-content: start; }
 .plan.current { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
@@ -318,5 +318,35 @@ table.t td:first-child { white-space: nowrap; }
 .feature-lines { list-style: none; margin: 0; display: grid; gap: 0; max-width: 460px; }
 .feature-lines li { display: flex; align-items: center; gap: .75rem; min-height: 44px; border-bottom: 1px solid rgba(255,255,255,.14); color: #e6f3ec; }
 .feature-lines li::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); flex: none; }
-#langSlot .btn { color: #fff; background: transparent; border-color: rgba(255,255,255,.35); }
+.auth-art #langSlot .btn { color: #fff; background: transparent; border-color: rgba(255,255,255,.35); }
 @media (max-width: 900px) { .auth-art .feature-lines { display: none; } }
+
+/* Clear Bengali numbers: amounts, counts and dates use the text face (its digits are open and even),
+   never the condensed display face. */
+.num, .ledger-hero .big, .stat b, .plan .price, .hero-figs b, .tile .a { font-family: var(--font-body); font-variant-numeric: tabular-nums; letter-spacing: .005em; }
+.ledger-hero .big { font-weight: 700; }
+.stat b, .hero-figs b { font-weight: 700; }
+.cols.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 700px) { .cols.two { grid-template-columns: 1fr; } }
+.chip { line-height: 1.5; padding: .15rem .65rem; }
+@media (max-width: 640px) {
+  .sheet-foot { gap: .5rem; }
+  .sheet-foot .btn { flex: 1 1 8.5rem; white-space: nowrap; padding: .55rem .7rem; }
+  .sheet-body { padding: 1rem; }
+  .kv { grid-template-columns: minmax(5rem, max-content) minmax(0, 1fr); column-gap: .8rem; }
+}
+
+/* Getting-started guide (new accounts) */
+.start-guide { margin-bottom: 1rem; border-color: var(--gold); background: linear-gradient(0deg, var(--surface), var(--gold-soft) 260%); }
+.steps-list { list-style: none; counter-reset: st; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; }
+.steps-list li { counter-increment: st; display: flex; align-items: center; gap: .6rem; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); min-height: 56px; }
+.steps-list li::before { content: counter(st); flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--surface-2); color: var(--muted); }
+.steps-list li.done { color: var(--muted); } .steps-list li.done::before { content: "✓"; background: var(--paid); color: #fff; }
+.steps-list li.next { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); } .steps-list li.next::before { background: var(--gold); color: #1d1606; }
+.steps-list a, .steps-list .link-btn { font-weight: 600; color: var(--brand); text-align: left; }
+:root[data-theme="dark"] .steps-list a { color: var(--gold); }
+@media (max-width: 1100px) { .steps-list { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .steps-list { grid-template-columns: 1fr; } }
+.plan { position: relative; }
+.plan.rec { border-color: var(--gold); }
+.plan-badge { position: absolute; top: -12px; left: 1.1rem; background: var(--gold); color: #1d1606; font-weight: 700; font-size: .8rem; padding: .15rem .7rem; border-radius: 99px; }

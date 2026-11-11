@@ -7,75 +7,147 @@
 <meta name="theme-color" content="#0e4a3a">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://esm.sh; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Rentora — বাড়ি ভাড়া ব্যবস্থাপনা</title>
-<meta name="description" content="Rentora: বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, ইউটিলিটি বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। Powered by SIDDIQIYA Technology.">
-<meta property="og:title" content="Rentora — বাড়ি ভাড়া ব্যবস্থাপনা">
-<meta property="og:description" content="ভাড়ার খাতা এখন মোবাইলে। কে দিল, কার বকেয়া — এক নজরে।">
+<meta name="description" content="বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, বিদ্যুৎ-গ্যাস-পানির বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। ১৪ দিন ফ্রি। Powered by SIDDIQIYA Technology.">
+<meta property="og:title" content="Rentora — ভাড়ার খাতা এখন মোবাইলে">
+<meta property="og:description" content="কে ভাড়া দিল, কার বকেয়া — এক নজরে। এক ক্লিকে ইনভয়েস ও রসিদ। ১৪ দিন ফ্রি।">
+<meta property="og:url" content="https://rentora.hsdmj.com/">
+<meta property="og:image" content="https://rentora.hsdmj.com/assets/img/icon-512.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Rentora">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/rentora.css">
+<link rel="stylesheet" href="assets/css/landing.css">
 </head>
-<body>
-<div class="auth">
-  <section class="auth-art">
-    <div class="brandrow" style="justify-content:space-between;width:100%"><div style="display:flex;gap:.8rem;align-items:center"><span class="mark">R</span><div><div class="wordmark">Rentora</div><div class="powered" id="pw1"></div></div></div><span id="langSlot"></span></div>
-    <div style="display:grid;gap:1rem">
-      <h1>ভাড়ার খাতা এখন আপনার মোবাইলে</h1>
-      <p class="lead">কে ভাড়া দিল, কার বকেয়া, এ মাসে বিদ্যুৎ বিল কত — এক নজরে দেখুন। ইনভয়েস আর রসিদ তৈরি হয় এক ক্লিকে।</p>
-    </div>
-    <ul class="feature-lines">
-      <li>এক নজরে কার ভাড়া পরিশোধিত, কার বকেয়া</li>
-      <li>এক ক্লিকে মাসিক ইনভয়েস, বিদ্যুৎ-গ্যাস-পানির বিলসহ</li>
-      <li>সাথে সাথে রসিদ — প্রিন্ট বা WhatsApp-এ পাঠান</li>
-      <li>আয়, খরচ ও বছরের লাভ-ক্ষতি রিপোর্ট</li>
-    </ul>
-    <p class="bottom small" style="color:#cfe6da">সাপোর্ট: ০১৭৭৮৬৬২৮৩৩ · <span id="pw2"></span></p>
-  </section>
+<body class="lp">
+<header class="lp-top">
+  <div class="lp-wrap lp-top-in">
+    <a class="lp-brand" href="./"><span class="mark">R</span><span class="wordmark">Rentora</span></a>
+    <nav class="lp-links" aria-label="পাতার অংশ"><a href="#features">সুবিধা</a><a href="#pricing">দাম</a><a href="#faq">প্রশ্ন-উত্তর</a></nav>
+    <span class="lp-actions"><span id="langSlot"></span><a class="btn ghost sm" href="login.html">লগইন</a><a class="btn gold sm lp-hide-xs" href="login.html?signup=1">ফ্রি শুরু করুন</a></span>
+  </div>
+</header>
 
-  <section class="auth-form">
-    <div class="auth-card">
-      <div>
-        <h2 id="formTitle">লগইন করুন</h2>
-        <p class="muted" id="formLead">আপনার ইমেইল ও পাসওয়ার্ড দিন।</p>
-      </div>
-      <div class="role-tabs" role="group" aria-label="আপনি কে">
-        <button type="button" data-role="owner" aria-pressed="true"><b>বাড়িওয়ালা</b><span>বাড়ি ও ভাড়া পরিচালনা</span></button>
-        <button type="button" data-role="tenant" aria-pressed="false"><b data-en="Tenant">ভাড়াটিয়া</b><span>বিল দেখুন, রসিদ নিন</span></button>
-      </div>
-
-      <form class="form" id="authForm" novalidate>
-        <label class="field" id="nameField" hidden><span>আপনার নাম</span><input class="input" name="full_name" autocomplete="name" maxlength="120"></label>
-        <label class="field"><span>ইমেইল</span><input class="input" name="email" type="email" required autocomplete="email"></label>
-        <label class="field" id="passField"><span>পাসওয়ার্ড</span><input class="input" name="password" type="password" minlength="8" required autocomplete="current-password"></label>
-        <div class="form-error" hidden></div>
-        <div class="form-ok" hidden style="background:var(--paid-soft);color:var(--paid);padding:.6rem .8rem;border-radius:8px;font-weight:600"></div>
-        <button class="btn primary block" id="submitBtn" type="submit">লগইন</button>
-      </form>
-      <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap" class="small">
-        <button class="link-btn" type="button" id="modeBtn">নতুন অ্যাকাউন্ট খুলুন</button>
-        <button class="link-btn" type="button" id="forgotBtn">পাসওয়ার্ড ভুলে গেছেন?</button>
-      </div>
-      <p class="small muted" id="tenantHint" hidden>বাড়িওয়ালা Rentora-তে আপনার যে ইমেইল দিয়েছেন, সেই ইমেইল দিয়ে অ্যাকাউন্ট খুলুন। তাহলে আপনার বিল ও রসিদ নিজে থেকে দেখা যাবে।</p>
-
-      <div class="demo-box" id="demoBox" hidden>
-        <b>সাইন আপ ছাড়াই দেখে নিন</b>
-        <span class="small">নমুনা তথ্যসহ পুরো সফটওয়্যারটি চালিয়ে দেখুন।</span>
-        <div class="row">
-          <a class="btn sm primary" href="app.html?demo=owner">বাড়িওয়ালার ডেমো</a>
-          <a class="btn sm" href="tenant.html?demo=tenant">ভাড়াটিয়ার ডেমো</a>
-          <a class="btn sm ghost" href="admin.html?demo=admin">Super Admin ডেমো</a>
+<main>
+  <section class="lp-hero">
+    <div class="lp-wrap lp-hero-in">
+      <div class="lp-hero-copy">
+        <h1>ভাড়ার খাতা এখন আপনার মোবাইলে</h1>
+        <p class="lp-lead">কে ভাড়া দিল, কার বকেয়া, এ মাসে বিদ্যুৎ বিল কত — এক নজরে দেখুন। এক ক্লিকে ইনভয়েস, সাথে সাথে রসিদ। খাতা-কলম আর হিসাবের ঝামেলা শেষ।</p>
+        <div class="lp-cta">
+          <a class="btn gold lp-big" href="login.html?signup=1">১৪ দিন ফ্রি ব্যবহার করুন</a>
+          <a class="btn lp-ghost lp-big" href="#how">কীভাবে কাজ করে</a>
         </div>
+        <ul class="lp-trust"><li>কোনো কার্ড লাগবে না</li><li>বাংলা ও English</li><li>মোবাইল, ট্যাব ও কম্পিউটারে</li></ul>
       </div>
-      <p class="small muted" style="text-align:center"><span id="pw3"></span></p>
+      <figure class="lp-phone" aria-label="Rentora ড্যাশবোর্ডের নমুনা ছবি">
+        <div class="lp-screen">
+          <div class="lp-scr-head"><span class="mark" style="width:26px;height:26px;font-size:.85rem;border-radius:8px">R</span><b>ড্যাশবোর্ড</b></div>
+          <div class="lp-scr-hero">
+            <span>নভেম্বরে আদায় হয়েছে</span>
+            <b>৳১,২৮,৫০০</b>
+            <i class="lp-meter"><i style="width:79%"></i></i>
+            <span>মোট বিল ৳১,৬২,০০০ · ৭৯%</span>
+          </div>
+          <div class="lp-scr-tiles">
+            <span class="t paid"><b>1A</b>পরিশোধিত</span><span class="t paid"><b>1B</b>পরিশোধিত</span>
+            <span class="t due"><b>2A</b>বকেয়া ৳১৫,০০০</span><span class="t partial"><b>2B</b>আংশিক</span>
+            <span class="t paid"><b>3A</b>পরিশোধিত</span><span class="t vacant"><b>3B</b>খালি</span>
+          </div>
+          <div class="lp-scr-btn">ভাড়া আদায় করুন</div>
+        </div>
+        <figcaption>নমুনা ছবি</figcaption>
+      </figure>
     </div>
   </section>
-</div>
-<script type="module" src="assets/js/login.js"></script>
+
+  <section class="lp-sec lp-compare" aria-labelledby="cmpTitle">
+    <div class="lp-wrap">
+      <h2 id="cmpTitle">খাতা-কলমের ঝামেলা, এক জায়গায় সমাধান</h2>
+      <div class="lp-cmp">
+        <div class="lp-cmp-col old"><h3>খাতায় হিসাব</h3>
+          <ul><li>মাস শেষে কে দিল, কে দিল না — খাতা উল্টে খুঁজতে হয়</li><li>বিদ্যুৎ বিল হাতে হিসাব, ভুলের ভয়</li><li>রসিদ চাইলে হাতে লিখে দিতে হয়</li><li>বছরে কত আয়, কত খরচ — জানা কঠিন</li></ul></div>
+        <div class="lp-cmp-col new"><h3>Rentora-তে</h3>
+          <ul><li>প্রতিটি ফ্ল্যাটের অবস্থা রঙে রঙে, এক নজরে</li><li>মিটার রিডিং দিলেই বিল নিজে হিসাব হয়</li><li>টাকা নিলেই রসিদ — প্রিন্ট বা WhatsApp</li><li>মাসভিত্তিক লাভ-ক্ষতি রিপোর্ট, PDF ও CSV</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-sec" id="features" aria-labelledby="featTitle">
+    <div class="lp-wrap">
+      <h2 id="featTitle">বাড়িওয়ালার যা যা দরকার, সব এক অ্যাপে</h2>
+      <div class="lp-feats" id="feats"></div>
+    </div>
+  </section>
+
+  <section class="lp-sec lp-how" id="how" aria-labelledby="howTitle">
+    <div class="lp-wrap">
+      <h2 id="howTitle">১০ মিনিটে শুরু করুন</h2>
+      <ol class="lp-steps">
+        <li><b>অ্যাকাউন্ট খুলুন</b><span>ইমেইল দিয়ে সাইন আপ করুন। ১৪ দিন সবকিছু ফ্রি।</span></li>
+        <li><b>বাড়ি ও ফ্ল্যাট যোগ করুন</b><span>বাড়ি › ভবন › ফ্ল্যাট/দোকান › রুম — যেভাবে আপনার সম্পত্তি সাজানো।</span></li>
+        <li><b>ভাড়াটিয়া বসান</b><span>নাম, মোবাইল, ভাড়া আর জামানত লিখে চুক্তি শুরু করুন।</span></li>
+        <li><b>ইনভয়েস দিন, ভাড়া তুলুন</b><span>মাসের শুরুতে এক ক্লিকে সব ইনভয়েস। টাকা পেলেই রসিদ।</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="lp-sec" id="pricing" aria-labelledby="priceTitle">
+    <div class="lp-wrap">
+      <h2 id="priceTitle">সহজ দাম, লুকানো কোনো খরচ নেই</h2>
+      <p class="lp-sub">১৪ দিন সব সুবিধা ফ্রি। তারপর আপনার বাড়ির মাপমতো প্যাকেজ বেছে নিন। স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না।</p>
+      <div class="lp-cycle"><div class="seg" id="cyc" role="group" aria-label="বিলিং"><button type="button" data-c="monthly" aria-pressed="true">মাসিক</button><button type="button" data-c="yearly" aria-pressed="false">বার্ষিক — ২ মাস ফ্রি</button></div></div>
+      <div class="lp-plans" id="plans"></div>
+      <p class="lp-pay">পেমেন্ট: বিকাশ ও নগদ</p>
+    </div>
+  </section>
+
+  <section class="lp-sec lp-safe" aria-labelledby="safeTitle">
+    <div class="lp-wrap lp-safe-in">
+      <div><h2 id="safeTitle">আপনার হিসাব শুধু আপনার</h2>
+        <p>প্রতিটি বাড়িওয়ালার তথ্য সম্পূর্ণ আলাদা রাখা হয়। অন্য কোনো বাড়িওয়ালা আপনার তথ্য দেখতে পারেন না, আর ভাড়াটিয়া দেখেন শুধু নিজের বিল ও রসিদ।</p></div>
+      <ul class="lp-safe-list">
+        <li>নিরাপদ এনক্রিপ্টেড সংযোগ (HTTPS)</li>
+        <li>মালিক, ম্যানেজার ও হিসাবরক্ষকের আলাদা অনুমতি</li>
+        <li>প্রতিটি পরিবর্তনের রেকর্ড থাকে</li>
+        <li>যেকোনো সময় নিজের সব তথ্য ডাউনলোড</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="lp-sec" id="faq" aria-labelledby="faqTitle">
+    <div class="lp-wrap lp-faq">
+      <h2 id="faqTitle">সাধারণ প্রশ্ন</h2>
+      <details><summary>ফ্রি ট্রায়ালে কী কী পাব?</summary><p>১৪ দিন সব সুবিধা ফ্রি — ইনভয়েস, রসিদ, ইউটিলিটি বিল, রিপোর্ট সব। কোনো কার্ড বা অগ্রিম টাকা লাগবে না।</p></details>
+      <details><summary>ট্রায়াল শেষে কী হবে?</summary><p>আপনার সব তথ্য থেকে যাবে। পছন্দের প্যাকেজ নিলে আগের মতোই কাজ চালিয়ে যেতে পারবেন। না নিলেও তথ্য দেখতে পারবেন।</p></details>
+      <details><summary>কীভাবে টাকা দেব?</summary><p>বিকাশ বা নগদে Send Money করে অ্যাপে ট্রানজেকশন আইডি দিন। যাচাইয়ের পর সাবস্ক্রিপশন চালু হয়। স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না।</p></details>
+      <details><summary>ভাড়াটিয়ারা কি নিজের বিল দেখতে পারবেন?</summary><p>হ্যাঁ। ভাড়াটিয়ার ইমেইল দিলে তিনি নিজের অ্যাকাউন্টে লগইন করে নিজের ইনভয়েস, বকেয়া ও রসিদ দেখতে পারবেন।</p></details>
+      <details><summary>মোবাইলে কি অ্যাপের মতো চালানো যায়?</summary><p>হ্যাঁ। ফোনের ব্রাউজারে Rentora খুলে "Add to Home Screen" করলে অ্যাপের মতো আইকনসহ খুলবে। iPhone ও Android দুটোতেই।</p></details>
+      <details><summary>একাধিক বাড়ি বা মার্কেট রাখা যাবে?</summary><p>যাবে। প্রতিটি সম্পত্তিতে একাধিক ভবন, ফ্ল্যাট, দোকান ও রুম রাখতে পারবেন। প্যাকেজ অনুযায়ী মোট ইউনিটের সীমা থাকে।</p></details>
+      <details><summary>পরে প্যাকেজ বদলানো যাবে?</summary><p>যাবে। যেকোনো সময় বড় বা ছোট প্যাকেজ নিতে পারবেন।</p></details>
+    </div>
+  </section>
+
+  <section class="lp-final">
+    <div class="lp-wrap lp-final-in">
+      <h2>এ মাসের ভাড়া Rentora দিয়ে তুলুন</h2>
+      <p>আজই শুরু করুন — ১৪ দিন সম্পূর্ণ ফ্রি।</p>
+      <a class="btn gold lp-big" href="login.html?signup=1">ফ্রি অ্যাকাউন্ট খুলুন</a>
+      <p class="lp-tenant">ভাড়াটিয়া? <a href="login.html?role=tenant">এখানে লগইন করুন</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="lp-foot">
+  <div class="lp-wrap lp-foot-in">
+    <div><a class="lp-brand" href="./"><span class="mark" style="width:32px;height:32px;font-size:1rem;border-radius:9px">R</span><span class="wordmark" style="font-size:1.1rem">Rentora</span></a>
+      <p class="small" id="pwFoot"></p></div>
+    <div class="small"><b>সাপোর্ট (WhatsApp)</b><br><span class="num">০১৭৭৮৬৬২৮৩৩</span></div>
+    <div class="small"><b>অফিস</b><br>নমপেন, কম্বোডিয়া · ঢাকা, বাংলাদেশ</div>
+  </div>
+</footer>
+<script type="module" src="assets/js/landing.js"></script>
 </body>
 </html>

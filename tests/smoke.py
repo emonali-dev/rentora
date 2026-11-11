@@ -24,7 +24,7 @@ with sync_playwright() as p:
             left = [t for t in texts if re.search('[\u0980-\u09F2\u09F4-\u09FF]', t)]
             if left: fails.append('untranslated text in English mode: ' + left[0][:80])
         pg.close()
-    for url, sel in (('tenant.html?demo=tenant', '.ledger-hero'), ('admin.html?demo=admin', '.ledger-hero'), ('index.html', '#authForm')):
+    for url, sel in (('tenant.html?demo=tenant', '.ledger-hero'), ('admin.html?demo=admin', '.ledger-hero'), ('login.html', '#authForm'), ('index.html', '.lp-plan'), ('app.html?demo=owner-new', '.start-guide')):
         pg = b.new_page(); pg.on('pageerror', lambda e: fails.append(f'{url}: {e}'))
         pg.goto(B + url); pg.wait_for_selector(sel); pg.wait_for_timeout(300); pg.close()
     b.close()

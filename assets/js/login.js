@@ -7,7 +7,8 @@ $('#langSlot').append(langButton('btn sm'));
 if (DEMO_ALLOWED) $('#demoBox').hidden = false;
 ['#pw1', '#pw2', '#pw3'].forEach(s => { const el = $(s); if (el) el.innerHTML = String(poweredBy()); });
 
-let mode = 'login', role = 'owner';
+const qs = new URLSearchParams(location.search);
+let mode = qs.get('signup') ? 'signup' : 'login', role = qs.get('role') === 'tenant' ? 'tenant' : 'owner';
 const form = $('#authForm'), err = $('.form-error', form), ok = $('.form-ok', form);
 const show = (box, msg) => { err.hidden = ok.hidden = true; if (msg) { box.textContent = msg; box.hidden = false; } };
 

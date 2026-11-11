@@ -4,9 +4,9 @@ import { getClient, exitDemo, html, raw, $, $$, n, tk, dateBn, LABEL, chip, icon
 initTheme(); demoBanner();
 const db = await getClient();
 const { data: { session } } = await db.auth.getSession();
-if (!session) location.replace('index.html');
+if (!session) location.replace('login.html');
 $('#themeBtn').innerHTML = String(icon('moon')); $('#themeBtn').onclick = toggleTheme; { const lb = langButton(); $('#themeBtn').before(lb); }
-$('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('index.html'); };
+$('#logoutBtn').onclick = async () => { await db.auth.signOut(); exitDemo(); location.replace('login.html'); };
 const { data: adm } = await db.from('platform_admins').select('user_id').eq('user_id', session.user.id);
 let tab = location.hash.slice(1) || 'overview';
 const TABS = { overview: 'সারসংক্ষেপ', customers: 'গ্রাহক', payments: 'পেমেন্ট যাচাই', plans: 'প্যাকেজ', settings: 'সেটিংস' };
