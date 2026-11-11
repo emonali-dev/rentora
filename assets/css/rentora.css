@@ -266,7 +266,7 @@ dialog.sheet.wide { width: min(860px, calc(100vw - 32px)); }
 .auth-art::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 35px, rgba(255,255,255,.05) 35px 36px); pointer-events: none; }
 .auth-art::after { content: ""; position: absolute; top: 0; bottom: 0; left: clamp(56px, 8vw, 96px); width: 2px; background: rgba(201,151,31,.55); pointer-events: none; }
 .auth-art > * { position: relative; z-index: 1; padding-left: clamp(36px, 6vw, 72px); }
-.auth-art .brandrow { display: flex; gap: .8rem; align-items: center; padding-left: 0; }
+.auth-art .brandrow { display: flex; gap: .8rem; align-items: center; }
 .auth-art h1 { font-size: clamp(2rem, 4.4vw, 3.3rem); font-weight: 700; max-width: 16ch; }
 .auth-art .lead { color: #d3e9de; font-size: 1.1rem; max-width: 44ch; }
 .ledger-lines { display: grid; gap: 0; max-width: 460px; font-size: 1rem; }
@@ -274,7 +274,7 @@ dialog.sheet.wide { width: min(860px, calc(100vw - 32px)); }
 .ledger-lines span:nth-child(2) { font-variant-numeric: tabular-nums; }
 .ledger-lines .ok { color: #8fe0b5; font-weight: 700; } .ledger-lines .no { color: #ffb4a6; font-weight: 700; } .ledger-lines .half { color: #f5cf73; font-weight: 700; }
 .auth-art .bottom { margin-top: auto; }
-.auth-form { display: flex; flex-direction: column; justify-content: center; padding: clamp(24px, 5vw, 64px) max(16px, env(safe-area-inset-right, 0px)) clamp(24px, 5vw, 64px) max(16px, env(safe-area-inset-left, 0px)); }
+.auth-form { display: flex; flex-direction: column; justify-content: flex-start; padding: clamp(32px, 12vh, 150px) max(16px, env(safe-area-inset-right, 0px)) clamp(24px, 5vw, 64px) max(16px, env(safe-area-inset-left, 0px)); }
 .auth-card { width: 100%; max-width: 430px; margin: 0 auto; display: grid; gap: 1.2rem; }
 .role-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
 .role-tabs button { border: 1.5px solid var(--line); background: var(--surface); border-radius: var(--r-md); padding: .7rem; cursor: pointer; text-align: left; display: grid; gap: .1rem; }
@@ -350,3 +350,14 @@ table.t td:first-child { white-space: nowrap; }
 .plan { position: relative; }
 .plan.rec { border-color: var(--gold); }
 .plan-badge { position: absolute; top: -12px; left: 1.1rem; background: var(--gold); color: #1d1606; font-weight: 700; font-size: .8rem; padding: .15rem .7rem; border-radius: 99px; }
+
+/* Sign-in page on phones: a short brand band, then the form right away */
+@media (max-width: 900px) {
+  .auth-art { padding: calc(18px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 22px max(16px, env(safe-area-inset-left, 0px)); gap: .9rem; }
+  .auth-art::after { display: none; }
+  .auth-art > * { padding-left: 0; }
+  .auth-art h1 { font-size: clamp(1.5rem, 6.4vw, 1.9rem); max-width: none; }
+  .auth-art .lead { display: none; }
+  .auth-art .powered { font-size: .74rem; }
+  .auth-form { padding-top: 24px; }
+}
