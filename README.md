@@ -1,7 +1,7 @@
 # বাসা ম্যানেজার (Basha Manager)
 
 বাড়িওয়ালাদের জন্য ভাড়া ব্যবস্থাপনার সফটওয়্যার (Rental Management SaaS)।
-**Powered by [SIDDIQIYA Technology](https://hsdmj.com)** · ঠিকানা: https://rentora.hsdmj.com
+**Powered by [SIDDIQIYA Technology](https://hsdmj.com)** · ঠিকানা: https://basha.hsdmj.com
 
 ## কী আছে
 

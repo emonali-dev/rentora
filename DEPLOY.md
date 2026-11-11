@@ -35,8 +35,8 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
    6. `202611120001_rentora_audit_fixes.sql`
    7. `202611120002_basha_manager_rename.sql`
 3. **Authentication › URL Configuration**
-   - Site URL: `https://rentora.hsdmj.com`
-   - Redirect URLs-এ যোগ করুন: `https://rentora.hsdmj.com/**`
+   - Site URL: `https://basha.hsdmj.com`
+   - Redirect URLs-এ যোগ করুন: `https://basha.hsdmj.com/**`
 4. **Authentication › Sign In / Providers › Email**: "Confirm email" চালু রাখুন। (ভাড়াটিয়া পোর্টাল যাচাই করা ইমেইল দিয়েই কাজ করে।)
 5. **Authentication › Emails › SMTP**: বেশি গ্রাহক হলে নিজের SMTP (যেমন Resend, Brevo) যুক্ত করুন। Supabase-এর নিজস্ব ইমেইল ঘণ্টায় খুব অল্প কয়েকটি পাঠায়।
 6. **Project Settings › API** থেকে দুটি তথ্য কপি করুন:
@@ -51,20 +51,20 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
 
 ## ধাপ ৩ — নিজেকে Super Admin বানান
 
-1. সাইট চালু হওয়ার পর `https://rentora.hsdmj.com` থেকে নিজের ইমেইলে একটি অ্যাকাউন্ট খুলুন এবং ইমেইল যাচাই করুন।
+1. সাইট চালু হওয়ার পর `https://basha.hsdmj.com` থেকে নিজের ইমেইলে একটি অ্যাকাউন্ট খুলুন এবং ইমেইল যাচাই করুন।
 2. Supabase › SQL Editor-এ চালান (ইমেইল বদলে নিন):
    ```sql
    insert into public.platform_admins(user_id)
    select id from auth.users where email = 'আপনার-ইমেইল@example.com';
    ```
-3. `https://rentora.hsdmj.com/admin.html` খুলুন › **সেটিংস** ট্যাবে বিকাশ/নগদ নম্বর, ট্রায়ালের দিন ইত্যাদি দিন।
+3. `https://basha.hsdmj.com/admin.html` খুলুন › **সেটিংস** ট্যাবে বিকাশ/নগদ নম্বর, ট্রায়ালের দিন ইত্যাদি দিন।
    **প্যাকেজ** ট্যাবে দাম ঠিক করুন (এখনকার দাম: বেসিক ৳২৯৯, স্ট্যান্ডার্ড ৳৫৯৯, প্রিমিয়াম ৳১,১৯৯ প্রতি মাসে)।
 
 ## ধাপ ৪ — GitHub Pages
 
 1. রিপো › **Settings › Pages**
    - Source: **Deploy from a branch** › Branch: `main` › Folder: `/ (root)` › Save
-   - Custom domain: `rentora.hsdmj.com` › Save (রিপোতে `CNAME` ফাইল আগে থেকেই আছে)
+   - Custom domain: `basha.hsdmj.com` › Save (রিপোতে `CNAME` ফাইল আগে থেকেই আছে)
 2. DNS ঠিক হওয়ার পর **Enforce HTTPS** টিক দিন (সার্টিফিকেট তৈরি হতে ১৫–৬০ মিনিট লাগতে পারে)।
 
 ## ধাপ ৫ — DNS (শুধু একটি নতুন রেকর্ড)
@@ -77,7 +77,7 @@ hsdmj.com-এর DNS যেখানে ম্যানেজ হয় (ডো�
 
 - Cloudflare ব্যবহার করলে প্রথমে **Proxy status: DNS only** (ধূসর মেঘ) রাখুন, যাতে GitHub HTTPS সার্টিফিকেট দিতে পারে।
 - `@`, `www` বা অন্য কোনো পুরনো রেকর্ড বদলাবেন না, মুছবেন না।
-- যাচাই: কয়েক মিনিট পর `https://rentora.hsdmj.com` খুলুন।
+- যাচাই: কয়েক মিনিট পর `https://basha.hsdmj.com` খুলুন।
 
 ## ধাপ ৬ — রাতের স্বয়ংক্রিয় ব্যাকআপ
 
@@ -98,7 +98,7 @@ psql "নতুন-ডাটাবেসের-URL" -f basha-manager.sql
 
 ## ধাপ ৭ — চালুর পর যাচাই (১০ মিনিট)
 
-- [ ] `https://rentora.hsdmj.com` খোলে, তালার চিহ্ন (HTTPS) আছে
+- [ ] `https://basha.hsdmj.com` খোলে, তালার চিহ্ন (HTTPS) আছে
 - [ ] নতুন বাড়িওয়ালা অ্যাকাউন্ট খোলা যায়, ইমেইল যাচাইয়ের লিংক আসে
 - [ ] সম্পত্তি › ভবন › ফ্ল্যাট যোগ করা যায়
 - [ ] ভাড়াটিয়া যোগ করে ফ্ল্যাটে বসানো যায়

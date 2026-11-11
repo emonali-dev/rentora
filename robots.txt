@@ -5,4 +5,4 @@ Allow: /login.html
 Disallow: /app.html
 Disallow: /tenant.html
 Disallow: /admin.html
-Sitemap: https://rentora.hsdmj.com/sitemap.xml
+Sitemap: https://basha.hsdmj.com/sitemap.xml
