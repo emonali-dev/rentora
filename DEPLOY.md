@@ -34,6 +34,7 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
    5. `202611110005_rentora_function_grants.sql`
    6. `202611120001_rentora_audit_fixes.sql`
    7. `202611120002_basha_manager_rename.sql`
+   8. `202611120003_fk_indexes.sql`
 3. **Authentication › URL Configuration**
    - Site URL: `https://basha.hsdmj.com`
    - Redirect URLs-এ যোগ করুন: `https://basha.hsdmj.com/**`
