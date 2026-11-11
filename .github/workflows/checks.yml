@@ -40,7 +40,7 @@ jobs:
           python-version: '3.12'
       - name: Install Playwright and Chromium
         run: |
-          pip install playwright==1.63.0
+          pip install playwright
           python -m playwright install --with-deps chromium
       - name: Demo click-through (owner, tenant, super admin)
         run: python3 tests/smoke.py .
