@@ -19,7 +19,7 @@ if (!adm?.length) {
 async function draw() {
   const v = $('#view');
   v.innerHTML = String(html`<div class="toolbar"><div class="seg" id="tabs">${Object.entries(TABS).map(([k, t]) => html`<button type="button" data-t="${k}" aria-pressed="${k === tab}">${t}</button>`)}</div></div><div id="body"></div>
-    <p class="small muted" style="text-align:center;margin-top:2rem">Rentora · ${poweredBy()}</p>`);
+    <p class="small muted" style="text-align:center;margin-top:2rem">বাসা ম্যানেজার · ${poweredBy()}</p>`);
   $$('#tabs button').forEach(b => b.onclick = () => { tab = b.dataset.t; history.replaceState(null, '', '#' + tab); draw(); });
   await ({ overview, customers, payments, plans, settings })[tab]();
 }

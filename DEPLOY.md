@@ -1,6 +1,6 @@
-# Rentora — rentora.hsdmj.com-এ চালু করার নির্দেশনা
+# বাসা ম্যানেজার (Basha Manager) — চালু করার নির্দেশনা
 
-Rentora সম্পূর্ণ আলাদা: নিজস্ব GitHub রিপো, নিজস্ব Supabase প্রজেক্ট, নিজস্ব সাবডোমেইন।
+বাসা ম্যানেজার (Basha Manager) সম্পূর্ণ আলাদা: নিজস্ব GitHub রিপো, নিজস্ব Supabase প্রজেক্ট, নিজস্ব সাবডোমেইন।
 **hsdmj.com ওয়েবসাইট, তার রিপো বা তার Supabase ডাটাবেসে কোনো পরিবর্তন করতে হবে না।**
 DNS-এ শুধু একটি নতুন রেকর্ড যোগ হবে, পুরনো কোনো রেকর্ড বদলাবে না।
 
@@ -24,15 +24,16 @@ DNS-এ শুধু একটি নতুন রেকর্ড যোগ হ�
    - নাম: `rentora`
    - Region: **Southeast Asia (Singapore)** — বাংলাদেশ থেকে সবচেয়ে দ্রুত
    - শক্তিশালী ডাটাবেস পাসওয়ার্ড দিন এবং নিরাপদে লিখে রাখুন।
-   > ফ্রি প্ল্যানে একটি অর্গানাইজেশনে ২টি পর্যন্ত সক্রিয় প্রজেক্ট রাখা যায়। hsdmj.com-এর প্রজেক্ট ১টি, Rentora ২য়টি হবে।
+   > ফ্রি প্ল্যানে একটি অর্গানাইজেশনে ২টি পর্যন্ত সক্রিয় প্রজেক্ট রাখা যায়। hsdmj.com-এর প্রজেক্ট ১টি, বাসা ম্যানেজার ২য়টি হবে।
    > ফ্রি প্রজেক্ট ১ সপ্তাহ অব্যবহৃত থাকলে Supabase সাময়িক বন্ধ (pause) করে দেয়। গ্রাহক নেওয়া শুরু হলে Pro প্ল্যান ($25/মাস) নিন — এতে প্রতিদিনের স্বয়ংক্রিয় ব্যাকআপও পাওয়া যায়।
-2. **SQL Editor** খুলে `supabase/rentora_full_schema.sql` একবারে চালান (অথবা `supabase/migrations/` ফোল্ডারের ফাইলগুলো ক্রমানুসারে):
+2. **SQL Editor** খুলে `supabase/full_schema.sql` একবারে চালান (অথবা `supabase/migrations/` ফোল্ডারের ফাইলগুলো ক্রমানুসারে):
    1. `202611110001_rentora_core.sql`
    2. `202611110002_rentora_security.sql`
    3. `202611110003_rentora_functions.sql`
    4. `202611110004_rentora_profiles.sql`
    5. `202611110005_rentora_function_grants.sql`
    6. `202611120001_rentora_audit_fixes.sql`
+   7. `202611120002_basha_manager_rename.sql`
 3. **Authentication › URL Configuration**
    - Site URL: `https://rentora.hsdmj.com`
    - Redirect URLs-এ যোগ করুন: `https://rentora.hsdmj.com/**`
@@ -90,8 +91,8 @@ hsdmj.com-এর DNS যেখানে ম্যানেজ হয় (ডো�
 
 ব্যাকআপ থেকে ফেরত আনা:
 ```bash
-gpg --decrypt rentora-YYYYMMDD-HHMM.sql.gz.gpg | gunzip > rentora.sql
-psql "নতুন-ডাটাবেসের-URL" -f rentora.sql
+gpg --decrypt basha-manager-YYYYMMDD-HHMM.sql.gz.gpg | gunzip > basha-manager.sql
+psql "নতুন-ডাটাবেসের-URL" -f basha-manager.sql
 ```
 এছাড়া প্রতিটি বাড়িওয়ালা **সেটিংস › সব তথ্য ডাউনলোড** থেকে নিজের তথ্যের JSON কপি রাখতে পারেন।
 

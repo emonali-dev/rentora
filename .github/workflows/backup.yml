@@ -1,6 +1,6 @@
 name: Nightly database backup
 
-# Encrypted pg_dump of the Rentora database, kept as a private workflow artifact for 30 days.
+# Encrypted pg_dump of the Basha Manager database, kept as a private workflow artifact for 30 days.
 # Needs two repository secrets (Settings > Secrets and variables > Actions):
 #   RENTORA_DB_URL     the Supabase "Session pooler" connection string (with password)
 #   BACKUP_PASSPHRASE  a long random passphrase; keep a copy offline, it is needed to restore
@@ -29,7 +29,7 @@ jobs:
         env: { DB: '${{ secrets.RENTORA_DB_URL }}', PASS: '${{ secrets.BACKUP_PASSPHRASE }}' }
         run: |
           set -o pipefail
-          f=rentora-$(date -u +%Y%m%d-%H%M).sql.gz.gpg
+          f=basha-manager-$(date -u +%Y%m%d-%H%M).sql.gz.gpg
           /usr/lib/postgresql/17/bin/pg_dump "$DB" --schema=public --no-owner --no-privileges \
             | gzip -9 | gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$PASS" -o "$f"
           ls -lh "$f"; echo "FILE=$f" >> "$GITHUB_ENV"

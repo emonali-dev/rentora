@@ -1,4 +1,4 @@
-/* Rentora home page. Same tokens as the app; the hero carries the ledger-paper motif from the sign-in page. */
+/* Basha Manager home page. Same tokens as the app; the hero carries the ledger-paper motif from the sign-in page. */
 .lp { background: var(--paper); }
 .lp-wrap { max-width: 1160px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
 .lp h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; max-width: 22ch; }

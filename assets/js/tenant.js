@@ -13,7 +13,7 @@ const uid = session.user.id;
 const { data: me } = await db.from('tenants').select('*').eq('user_id', uid);
 if (!me?.length) {
   $('#view').innerHTML = String(html`<section class="panel" style="max-width:560px;margin:2rem auto"><div class="empty"><div class="art">${icon('home')}</div><h2>এখনো কোনো বাসা যুক্ত হয়নি</h2>
-    <p>আপনার বাড়িওয়ালাকে Rentora-তে আপনার এই ইমেইলটি দিতে বলুন: <b>${session.user.email}</b>। তিনি যোগ করলে এখানে আপনার বিল ও রসিদ দেখা যাবে।</p>
+    <p>আপনার বাড়িওয়ালাকে বাসা ম্যানেজার-এ আপনার এই ইমেইলটি দিতে বলুন: <b>${session.user.email}</b>। তিনি যোগ করলে এখানে আপনার বিল ও রসিদ দেখা যাবে।</p>
     <a class="btn" href="app.html">আমি বাড়িওয়ালা — নিজের অ্যাকাউন্ট খুলব</a></div></section>`);
 } else {
   const tIds = me.map(t => t.id);
@@ -39,7 +39,7 @@ if (!me?.length) {
         <div class="right"><b class="num">${tk(i.subtotal)}</b>${chip(['unpaid', 'partial'].includes(i.status) && i.due_date < todayISO() ? 'overdue' : i.status)}</div></div>`)}</div>` : html`<p class="muted">এখনো কোনো ইনভয়েস নেই।</p>`}</section>
     <section class="panel"><h2 style="margin-bottom:.4rem">টাকা প্রাপ্তির রসিদ</h2>
       ${payments.length ? html`<div class="list">${payments.map(p => html`<div class="list-row click" data-pay="${p.id}"><div><div class="title">${p.receipt_no}</div><div class="sub">${dateBn(p.paid_on)} · ${LABEL.method[p.method]}</div></div><div class="right"><b class="num">${tk(p.amount)}</b></div></div>`)}</div>` : html`<p class="muted">এখনো কোনো রসিদ নেই।</p>`}</section>
-    <p class="small muted" style="text-align:center;margin-top:1.5rem">Rentora · ${poweredBy()}</p>`);
+    <p class="small muted" style="text-align:center;margin-top:1.5rem">বাসা ম্যানেজার · ${poweredBy()}</p>`);
 
   const head = (org, title, no) => `<div class="doc-head"><div><h2>${esc(org?.name || '')}</h2><div>${esc(org?.address || '')}</div></div><div style="text-align:right"><h2>${esc(title)}</h2><div>${esc(no)}</div></div></div>`;
   $$('[data-inv]').forEach(r => r.onclick = async () => {
@@ -48,7 +48,7 @@ if (!me?.length) {
     if (error) return alertSheet(errText(error));
     const doc = `<div class="doc">${head(O(i.org_id), 'ইনভয়েস', i.invoice_no)}<div>${esc(me.find(t => t.id === i.tenant_id)?.full_name)} — ${esc(place(U(i.unit_id)))}<br>মাস: <b>${esc(monthLabel(i.period))}</b> · শেষ তারিখ: <b>${esc(dateBn(i.due_date))}</b></div>
       <table><tbody>${items.map(x => `<tr><td>${esc(bnDigits(x.description))}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(i.subtotal))}</td></tr><tr><td>পরিশোধিত</td><td class="r">${esc(tk(i.paid_amount))}</td></tr><tr><td><b>বকেয়া</b></td><td class="r"><b>${esc(tk(due(i)))}</b></td></tr></tbody></table>
-      <span class="stamp ${i.status === 'paid' ? '' : 'unpaid'}">${esc(LABEL.status[i.status])}</span><div class="foot"><span></span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
+      <span class="stamp ${i.status === 'paid' ? '' : 'unpaid'}">${esc(LABEL.status[i.status])}</span><div class="foot"><span></span><span>বাসা ম্যানেজার · Powered by SIDDIQIYA Technology</span></div></div>`;
     const d = openSheet({ wide: true, title: 'ইনভয়েস ' + i.invoice_no, body: raw(doc), foot: html`<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>` });
     $('[data-print]', d).onclick = () => printDoc(doc);
   });
@@ -56,7 +56,7 @@ if (!me?.length) {
     const p = payments.find(x => x.id === r.dataset.pay), i = invoices.find(x => x.id === p.invoice_id);
     const doc = `<div class="doc">${head(O(p.org_id), 'টাকা প্রাপ্তির রসিদ', p.receipt_no)}<p><b>${esc(tk(p.amount))}</b> আদায় হয়েছে, ${esc(dateBn(p.paid_on))} তারিখে (${esc(LABEL.method[p.method])})।</p>
       <table><tbody><tr><td>ইনভয়েস</td><td class="r">${esc(i?.invoice_no || '')} (${esc(i ? monthLabel(i.period) : '')})</td></tr><tr class="total"><td>আদায়</td><td class="r">${esc(tk(p.amount))}</td></tr></tbody></table>
-      <span class="stamp">গৃহীত</span><div class="foot"><span></span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
+      <span class="stamp">গৃহীত</span><div class="foot"><span></span><span>বাসা ম্যানেজার · Powered by SIDDIQIYA Technology</span></div></div>`;
     const d = openSheet({ wide: true, title: 'রসিদ ' + p.receipt_no, body: raw(doc), foot: html`<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>` });
     $('[data-print]', d).onclick = () => printDoc(doc);
   });

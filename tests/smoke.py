@@ -10,7 +10,7 @@ with sync_playwright() as p:
     b = p.chromium.launch(**({"executable_path": __import__("os").environ["CHROME"], "args": ["--no-sandbox"]} if __import__("os").environ.get("CHROME") else {}))
     for vp, lang in (({'width': 1280, 'height': 860}, 'bn'), ({'width': 390, 'height': 844}, 'bn'), ({'width': 1280, 'height': 860}, 'en'), ({'width': 390, 'height': 844}, 'en')):
         pg = b.new_page(viewport=vp)
-        pg.add_init_script(f"try{{localStorage.setItem('rentora_lang','{lang}')}}catch(e){{}}")
+        pg.add_init_script(f"try{{localStorage.setItem('basha_lang','{lang}')}}catch(e){{}}")
         pg.on('pageerror', lambda e: fails.append(f'{pg.url}: {e}'))
         pg.goto(B + 'app.html?demo=owner'); pg.wait_for_selector('.ledger-hero')
         for r in ['property', 'tenants', 'bills', 'bills/utility', 'money', 'reports', 'messages', 'plan', 'settings', 'home']:

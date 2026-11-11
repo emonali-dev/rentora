@@ -1,4 +1,4 @@
-// Rentora public home page: features, live prices from the database, language switch.
+// বাসা ম্যানেজার public home page: features, live prices from the database, language switch.
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js';
 import { html, raw, $, $$, n, tk, icon, poweredBy, langButton, initTheme } from './core.js';
 

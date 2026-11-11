@@ -1,4 +1,4 @@
-// English for Rentora. The app is written in Bengali; when English is chosen, every piece of text
+// English for Basha Manager. The app is written in Bengali; when English is chosen, every piece of text
 // on screen (pages, dialogs, toasts, printed invoices) is translated through these tables.
 // Keys may use Bengali or Latin digits; both are normalised before matching.
 
@@ -30,9 +30,9 @@ export const RULES = [
 // Phrases (longest match wins; a phrase only matches as a whole word).
 export const PHRASES = [
   // ---- brand, navigation, chrome ----
-  ['Rentora — বাড়ি ভাড়া ব্যবস্থাপনা', 'Rentora — Rental Management'],
-  ['Rentora ড্যাশবোর্ড', 'Rentora Dashboard'], ['আমার ভাড়া — Rentora', 'My Rent — Rentora'],
-  ['পাতা পাওয়া যায়নি — Rentora', 'Page not found — Rentora'],
+  ['বাসা ম্যানেজার — বাড়ি ভাড়া ব্যবস্থাপনা', 'Basha Manager — Rental Management'],
+  ['বাসা ম্যানেজার ড্যাশবোর্ড', 'Basha Manager Dashboard'], ['আমার ভাড়া — বাসা ম্যানেজার', 'My Rent — Basha Manager'],
+  ['পাতা পাওয়া যায়নি — বাসা ম্যানেজার', 'Page not found — Basha Manager'],
   ['ভাড়া ব্যবস্থাপনা', 'Rental management'], ['ড্যাশবোর্ড', 'Dashboard'], ['সম্পত্তি ও ইউনিট', 'Properties & Units'],
   ['ভাড়াটিয়া', 'Tenants'], ['ইনভয়েস ও বিল', 'Invoices & Bills'], ['আয়-ব্যয়', 'Income & Expenses'],
   ['লাভ-ক্ষতি রিপোর্ট', 'Profit & Loss Report'], ['SMS ও WhatsApp', 'SMS & WhatsApp'], ['সাবস্ক্রিপশন', 'Subscription'],
@@ -194,15 +194,15 @@ export const PHRASES = [
   ['সার্ভারে প্রতিদিন স্বয়ংক্রিয় ব্যাকআপ হয়। নিজের কাছে রাখতে চাইলে সব তথ্য এক ফাইলে ডাউনলোড করুন।', 'The server is backed up automatically every day. To keep your own copy, download all your data as one file.'],
   ['সব তথ্য ডাউনলোড (JSON', 'Download all data (JSON'], ['আমার অ্যাকাউন্ট', 'My account'], ['ভূমিকা', 'Role'], ['পাসওয়ার্ড বদলান', 'Change password'],
   ['ডার্ক/লাইট মোড', 'Dark/light mode'], ['· সাপোর্ট', '· Support'], ['সাপোর্ট:', 'Support:'], ['টিম সদস্য যোগ করুন', 'Add team member'],
-  ['সদস্যকে আগে Rentora-তে নিজের ইমেইল দিয়ে সাইন আপ করতে বলুন, তারপর সেই ইমেইল এখানে লিখুন।', 'Ask the member to sign up to Rentora with their own email first, then enter that email here.'],
+  ['সদস্যকে আগে বাসা ম্যানেজার-এ নিজের ইমেইল দিয়ে সাইন আপ করতে বলুন, তারপর সেই ইমেইল এখানে লিখুন।', 'Ask the member to sign up to Basha Manager with their own email first, then enter that email here.'],
   ['সদস্য যোগ হয়েছে', 'Member added'], ['এই সদস্যকে টিম থেকে বাদ দেবেন', 'Remove this member from the team'], ['বাদ দেওয়া হয়েছে', 'Removed'],
   ['নতুন পাসওয়ার্ড', 'New password'], ['কমপক্ষে ৮ অক্ষর', 'At least 8 characters'], ['পাসওয়ার্ড বদলানো হয়েছে', 'Password changed'],
 
   // ---- onboarding, dialogs, errors ----
-  ['Rentora-তে স্বাগতম', 'Welcome to Rentora'], ['আপনার ব্যবসার অ্যাকাউন্ট খুলুন', 'Open your business account'],
+  ['বাসা ম্যানেজার-এ স্বাগতম', 'Welcome to Basha Manager'], ['আপনার ব্যবসার অ্যাকাউন্ট খুলুন', 'Open your business account'],
   ['দিন সম্পূর্ণ ফ্রি। কোনো কার্ড লাগবে না।', 'days completely free. No card needed.'], ['বাড়ি বা ব্যবসার নাম', 'House or business name'],
   ['যেমন: রহমান প্রপার্টিজ', 'e.g. Rahman Properties'], ['শুরু করুন', 'Get started'],
-  ['ভাড়াটিয়া হিসেবে লগইন করেছেন? আপনার বাড়িওয়ালাকে Rentora-তে আপনার এই ইমেইলটি দিতে বলুন', 'Signed in as a tenant? Ask your landlord to add this email of yours in Rentora'],
+  ['ভাড়াটিয়া হিসেবে লগইন করেছেন? আপনার বাড়িওয়ালাকে বাসা ম্যানেজার-এ আপনার এই ইমেইলটি দিতে বলুন', 'Signed in as a tenant? Ask your landlord to add this email of yours in Basha Manager'],
   ['নিশ্চিত করুন', 'Please confirm'], ['না', 'No'], ['হ্যাঁ, নিশ্চিত', 'Yes, confirm'], ['একটি ঘর', 'A field'], ['ঠিকমতো পূরণ করুন।', '— please fill it in correctly.'],
   ['বাতিল', 'Cancel'], ['আবার চেষ্টা করুন', 'Try again'], ['সমস্যা', 'Problem'],
   ['ইমেইল বা পাসওয়ার্ড ভুল।', 'Wrong email or password.'], ['ইমেইল এখনো যাচাই হয়নি। আপনার ইনবক্সে পাঠানো লিংকে ক্লিক করুন।', 'Your email is not verified yet. Click the link sent to your inbox.'],
@@ -215,7 +215,7 @@ export const PHRASES = [
   ['এই কাজের অনুমতি শুধু মালিক ও ম্যানেজারের।', 'Only the owner and managers can do this.'],
   // database messages
   ['লগইন করুন', 'Please log in'], ['এই কাজের অনুমতি নেই', 'You do not have permission for this'], ['একজন ব্যবহারকারী সর্বোচ্চ ৩টি অ্যাকাউন্ট খুলতে পারেন', 'One user can open at most 3 accounts'],
-  ['ভূমিকা সঠিক নয়', 'Invalid role'], ['এই ইমেইলে কোনো Rentora অ্যাকাউন্ট নেই। আগে সাইন আপ করতে বলুন।', 'There is no Rentora account with this email. Ask them to sign up first.'],
+  ['ভূমিকা সঠিক নয়', 'Invalid role'], ['এই ইমেইলে কোনো বাসা ম্যানেজার অ্যাকাউন্ট নেই। আগে সাইন আপ করতে বলুন।', 'There is no Basha Manager account with this email. Ask them to sign up first.'],
   ['এত পরের মাসের ইনভয়েস এখন তৈরি করা যাবে না', 'Invoices that far ahead cannot be created yet'], ['ইনভয়েস পাওয়া যায়নি', 'Invoice not found'],
   ['বাতিল ইনভয়েসে টাকা নেওয়া যাবে না', 'Cannot take payment on a cancelled invoice'], ['টাকার পরিমাণ সঠিক নয়', 'Invalid amount'],
   ['ভবিষ্যতের তারিখ দেওয়া যাবে না', 'The date cannot be in the future'], ['টাকা জমা হওয়া ইনভয়েস বাতিল করা যাবে না', 'An invoice with payments cannot be cancelled'],
@@ -228,7 +228,7 @@ export const PHRASES = [
   ['লগইন করুন', 'Log in'], ['আপনার ইমেইল ও পাসওয়ার্ড দিন।', 'Enter your email and password.'], ['আপনি কে', 'Who are you'],
   ['বাড়িওয়ালা', 'Landlord'], ['বাড়ি ও ভাড়া পরিচালনা', 'Manage houses and rent'], ['বিল দেখুন, রসিদ নিন', 'See bills, get receipts'],
   ['আপনার নাম', 'Your name'], ['পাসওয়ার্ড', 'Password'], ['লগইন', 'Log in'], ['নতুন অ্যাকাউন্ট খুলুন', 'Create a new account'], ['পাসওয়ার্ড ভুলে গেছেন', 'Forgot password'],
-  ['বাড়িওয়ালা Rentora-তে আপনার যে ইমেইল দিয়েছেন, সেই ইমেইল দিয়ে অ্যাকাউন্ট খুলুন। তাহলে আপনার বিল ও রসিদ নিজে থেকে দেখা যাবে।', 'Sign up with the email your landlord gave Rentora. Your bills and receipts will then appear automatically.'],
+  ['বাড়িওয়ালা বাসা ম্যানেজার-এ আপনার যে ইমেইল দিয়েছেন, সেই ইমেইল দিয়ে অ্যাকাউন্ট খুলুন। তাহলে আপনার বিল ও রসিদ নিজে থেকে দেখা যাবে।', 'Sign up with the email your landlord gave Basha Manager. Your bills and receipts will then appear automatically.'],
   ['সাইন আপ ছাড়াই দেখে নিন', 'Try it without signing up'], ['নমুনা তথ্যসহ পুরো সফটওয়্যারটি চালিয়ে দেখুন।', 'Explore the whole app with sample data.'],
   ['বাড়িওয়ালার ডেমো', 'Landlord demo'], ['ভাড়াটিয়ার ডেমো', 'Tenant demo'], ['Super Admin ডেমো', 'Super Admin demo'],
   ['ভাড়ার খাতা এখন আপনার মোবাইলে', 'Your rent ledger, now on your phone'],
@@ -245,10 +245,10 @@ export const PHRASES = [
   ['ইমেইল থাকলে সেখানে রিসেট লিংক পাঠানো হয়েছে। ইনবক্স ও স্প্যাম ফোল্ডার দেখুন।', 'If the email exists, a reset link has been sent. Check your inbox and spam folder.'],
   ['নতুন পাসওয়ার্ড সংরক্ষণ হয়েছে।', 'New password saved.'],
   ['ভাড়ার খাতা এখন মোবাইলে। কে দিল, কার বকেয়া — এক নজরে।', 'Your rent ledger on your phone. Who paid and who owes — at a glance.'],
-  ['Rentora: বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, ইউটিলিটি বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। Powered by SIDDIQIYA Technology', 'Rentora: simple software for landlords — rent, dues, utility bills, invoices and receipts. Powered by SIDDIQIYA Technology'],
+  ['বাসা ম্যানেজার: বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, ইউটিলিটি বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। Powered by SIDDIQIYA Technology', 'Basha Manager: simple software for landlords — rent, dues, utility bills, invoices and receipts. Powered by SIDDIQIYA Technology'],
 
   // ---- tenant portal ----
-  ['এখনো কোনো বাসা যুক্ত হয়নি', 'No home linked yet'], ['আপনার বাড়িওয়ালাকে Rentora-তে আপনার এই ইমেইলটি দিতে বলুন', 'Ask your landlord to add this email of yours in Rentora'],
+  ['এখনো কোনো বাসা যুক্ত হয়নি', 'No home linked yet'], ['আপনার বাড়িওয়ালাকে বাসা ম্যানেজার-এ আপনার এই ইমেইলটি দিতে বলুন', 'Ask your landlord to add this email of yours in Basha Manager'],
   ['। তিনি যোগ করলে এখানে আপনার বিল ও রসিদ দেখা যাবে।', '. Once added, your bills and receipts will show here.'], ['আমি বাড়িওয়ালা — নিজের অ্যাকাউন্ট খুলব', 'I am a landlord — open my own account'],
   ['আসসালামু আলাইকুম', 'Assalamu Alaikum'], ['আপনার মোট বকেয়া', 'Your total due'], ['সব ভাড়া পরিশোধিত', 'All rent paid'], ['— পার হয়ে গেছে', '— passed'],
   ['মাসিক ভাড়া', 'Monthly rent'], ['বাড়িওয়ালার সাথে যোগাযোগ', 'Contact your landlord'], ['এখনো কোনো ইনভয়েস নেই।', 'No invoices yet.'], ['এখনো কোনো রসিদ নেই।', 'No receipts yet.'],
@@ -273,22 +273,22 @@ export const PHRASES = [
   ['প্ল্যাটফর্ম সেটিংস', 'Platform settings'], ['ফ্রি ট্রায়াল (দিন', 'Free trial (days'], ['মেয়াদ শেষের পর সুযোগ (দিন', 'Grace period after expiry (days'],
   ['বিকাশ নম্বর', 'bKash number'], ['নগদ নম্বর', 'Nagad number'], ['রকেট নম্বর', 'Rocket number'], ['ব্যাংক তথ্য', 'Bank details'], ['সাপোর্ট মোবাইল', 'Support mobile'],
   ['অনুমতি নেই', 'No access'], ['এই পাতা শুধু SIDDIQIYA Technology-র Super Admin-দের জন্য।', 'This page is only for SIDDIQIYA Technology Super Admins.'], ['ড্যাশবোর্ডে ফিরে যান', 'Back to dashboard'],
-  ['পাতাটি পাওয়া যায়নি', 'Page not found'], ['লিংকটি ভুল হতে পারে।', 'The link may be wrong.'], ['Rentora-র মূল পাতায় যান', 'Go to the Rentora home page'],
+  ['পাতাটি পাওয়া যায়নি', 'Page not found'], ['লিংকটি ভুল হতে পারে।', 'The link may be wrong.'], ['বাসা ম্যানেজার-এর মূল পাতায় যান', 'Go to the Basha Manager home page'],
 
   // ---- small words (whole-word only) ----
   ['দিন', 'days'], ['দিনের', 'days'], ['টি ইউনিট', ' units'], ['টি ইনভয়েস', ' invoices'], ['বছর', 'Year'], ['এর', ''], ['-এর', ''], ['ও', '&'],
 ];
 
 // Words used in more than one place: the wording that reads right everywhere wins.
-PHRASES.push(['ভাড়ার শেষ দিন', 'Rent due day'], ['আদায় করুন', 'Collect'], ['ভাড়া আদায়', 'Rent collected'], ['ভাড়া আদায় করুন', 'Collect rent'], ['ভাড়াটিয়া', 'Tenants'], ['মোট আয়', 'Total income'], ['লগইন করুন', 'Log in']);
+PHRASES.push(['বাসা ম্যানেজার', 'Basha Manager'], ['ভাড়ার শেষ দিন', 'Rent due day'], ['আদায় করুন', 'Collect'], ['ভাড়া আদায়', 'Rent collected'], ['ভাড়া আদায় করুন', 'Collect rent'], ['ভাড়াটিয়া', 'Tenants'], ['মোট আয়', 'Total income'], ['লগইন করুন', 'Log in']);
 
 // Home page
 PHRASES.push(
   ['পাতার অংশ', 'Page sections'], ['সুবিধা', 'Features'], ['দাম', 'Pricing'], ['প্রশ্ন-উত্তর', 'FAQ'], ['ফ্রি শুরু করুন', 'Start free'],
   ['কে ভাড়া দিল, কার বকেয়া, এ মাসে বিদ্যুৎ বিল কত — এক নজরে দেখুন। এক ক্লিকে ইনভয়েস, সাথে সাথে রসিদ। খাতা-কলম আর হিসাবের ঝামেলা শেষ।', 'Who has paid, who owes, what this month’s electricity bill is — see it at a glance. Invoices in one click, receipts instantly. No more ledgers and manual sums.'],
   ['১৪ দিন ফ্রি ব্যবহার করুন', 'Try it free for 14 days'], ['কীভাবে কাজ করে', 'How it works'], ['কোনো কার্ড লাগবে না', 'No card needed'], ['বাংলা ও English', 'Bangla & English'],
-  ['মোবাইল, ট্যাব ও কম্পিউটারে', 'Phone, tablet & computer'], ['Rentora ড্যাশবোর্ডের নমুনা ছবি', 'Sample picture of the Rentora dashboard'], ['নভেম্বরে আদায় হয়েছে', 'Collected in November'],
-  ['নমুনা ছবি', 'Sample picture'], ['খাতা-কলমের ঝামেলা, এক জায়গায় সমাধান', 'Every ledger headache, solved in one place'], ['খাতায় হিসাব', 'With a paper ledger'], ['Rentora-তে', 'With Rentora'],
+  ['মোবাইল, ট্যাব ও কম্পিউটারে', 'Phone, tablet & computer'], ['বাসা ম্যানেজার ড্যাশবোর্ডের নমুনা ছবি', 'Sample picture of the Basha Manager dashboard'], ['নভেম্বরে আদায় হয়েছে', 'Collected in November'],
+  ['নমুনা ছবি', 'Sample picture'], ['খাতা-কলমের ঝামেলা, এক জায়গায় সমাধান', 'Every ledger headache, solved in one place'], ['খাতায় হিসাব', 'With a paper ledger'], ['বাসা ম্যানেজার-এ', 'With Basha Manager'],
   ['মাস শেষে কে দিল, কে দিল না — খাতা উল্টে খুঁজতে হয়', 'At month end you page through the ledger to see who paid'],
   ['বিদ্যুৎ বিল হাতে হিসাব, ভুলের ভয়', 'Electricity bills worked out by hand, with mistakes'], ['রসিদ চাইলে হাতে লিখে দিতে হয়', 'Receipts written by hand on request'],
   ['বছরে কত আয়, কত খরচ — জানা কঠিন', 'Hard to know the year’s income and expenses'], ['প্রতিটি ফ্ল্যাটের অবস্থা রঙে রঙে, এক নজরে', 'Every flat’s status in colour, at a glance'],
@@ -318,15 +318,15 @@ PHRASES.push(
   ['ট্রায়াল শেষে কী হবে', 'What happens when the trial ends'], ['আপনার সব তথ্য থেকে যাবে। পছন্দের প্যাকেজ নিলে আগের মতোই কাজ চালিয়ে যেতে পারবেন। না নিলেও তথ্য দেখতে পারবেন।', 'All your data stays. Choose a package to keep working as before. Even without one, you can still view your data.'],
   ['কীভাবে টাকা দেব', 'How do I pay'], ['বিকাশ বা নগদে Send Money করে অ্যাপে ট্রানজেকশন আইডি দিন। যাচাইয়ের পর সাবস্ক্রিপশন চালু হয়। স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না।', 'Send Money by bKash or Nagad and enter the transaction ID in the app. Your subscription starts after verification. Nothing is charged automatically.'],
   ['ভাড়াটিয়ারা কি নিজের বিল দেখতে পারবেন', 'Can tenants see their own bills'], ['হ্যাঁ। ভাড়াটিয়ার ইমেইল দিলে তিনি নিজের অ্যাকাউন্টে লগইন করে নিজের ইনভয়েস, বকেয়া ও রসিদ দেখতে পারবেন।', 'Yes. Add the tenant’s email and they can log in to see their own invoices, dues and receipts.'],
-  ['মোবাইলে কি অ্যাপের মতো চালানো যায়', 'Can I use it like an app on my phone'], ['হ্যাঁ। ফোনের ব্রাউজারে Rentora খুলে "Add to Home Screen" করলে অ্যাপের মতো আইকনসহ খুলবে। iPhone ও Android দুটোতেই।', 'Yes. Open Rentora in your phone’s browser and choose "Add to Home Screen" — it opens like an app with its own icon, on iPhone and Android.'],
+  ['মোবাইলে কি অ্যাপের মতো চালানো যায়', 'Can I use it like an app on my phone'], ['হ্যাঁ। ফোনের ব্রাউজারে বাসা ম্যানেজার খুলে "Add to Home Screen" করলে অ্যাপের মতো আইকনসহ খুলবে। iPhone ও Android দুটোতেই।', 'Yes. Open Basha Manager in your phone’s browser and choose "Add to Home Screen" — it opens like an app with its own icon, on iPhone and Android.'],
   ['একাধিক বাড়ি বা মার্কেট রাখা যাবে', 'Can I manage several houses or markets'], ['যাবে। প্রতিটি সম্পত্তিতে একাধিক ভবন, ফ্ল্যাট, দোকান ও রুম রাখতে পারবেন। প্যাকেজ অনুযায়ী মোট ইউনিটের সীমা থাকে।', 'Yes. Each property can have several buildings, flats, shops and rooms. Your package sets the total number of units.'],
   ['পরে প্যাকেজ বদলানো যাবে', 'Can I change package later'], ['যাবে। যেকোনো সময় বড় বা ছোট প্যাকেজ নিতে পারবেন।', 'Yes. Move to a larger or smaller package at any time.'],
-  ['এ মাসের ভাড়া Rentora দিয়ে তুলুন', 'Collect this month’s rent with Rentora'], ['আজই শুরু করুন — ১৪ দিন সম্পূর্ণ ফ্রি।', 'Start today — 14 days completely free.'], ['ফ্রি অ্যাকাউন্ট খুলুন', 'Create a free account'],
+  ['এ মাসের ভাড়া বাসা ম্যানেজার দিয়ে তুলুন', 'Collect this month’s rent with Basha Manager'], ['আজই শুরু করুন — ১৪ দিন সম্পূর্ণ ফ্রি।', 'Start today — 14 days completely free.'], ['ফ্রি অ্যাকাউন্ট খুলুন', 'Create a free account'],
   ['ভাড়াটিয়া?', 'Tenant?'], ['এখানে লগইন করুন', 'Log in here'], ['সাপোর্ট (WhatsApp', 'Support (WhatsApp'], ['অফিস', 'Office'], ['নমপেন, কম্বোডিয়া · ঢাকা, বাংলাদেশ', 'Phnom Penh, Cambodia · Dhaka, Bangladesh'],
   ['বাড়িওয়ালাদের জন্য ভাড়া, বকেয়া, বিদ্যুৎ-গ্যাস-পানির বিল, ইনভয়েস ও রসিদের সহজ সফটওয়্যার। ১৪ দিন ফ্রি। Powered by SIDDIQIYA Technology', 'Simple software for landlords — rent, dues, utility bills, invoices and receipts. 14 days free. Powered by SIDDIQIYA Technology'],
-  ['লগইন — Rentora', 'Log in — Rentora'],
+  ['লগইন — বাসা ম্যানেজার', 'Log in — Basha Manager'],
   // dashboard additions
-  ['শুরু করার ধাপ', 'Getting started'], ['বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।', 'finish the rest and Rentora is fully set up.'], ['এর মধ্যে', 'of'], ['সম্পন্ন —', 'done —'],
+  ['শুরু করার ধাপ', 'Getting started'], ['বাকিগুলো করলেই বাসা ম্যানেজার পুরোপুরি কাজ শুরু করবে।', 'finish the rest and Basha Manager is fully set up.'], ['এর মধ্যে', 'of'], ['সম্পন্ন —', 'done —'],
   ['বাড়ি বা মার্কেট যোগ করুন', 'Add a house or market'], ['ফ্ল্যাট, দোকান বা রুম যোগ করুন', 'Add flats, shops or rooms'], ['প্রথম ইনভয়েস তৈরি করুন', 'Create your first invoice'], ['প্রথম ভাড়া আদায় করুন', 'Collect your first rent'],
   ['স্বয়ংক্রিয়ভাবে কোনো টাকা কাটা হয় না। মেয়াদ শেষের আগে আপনাকে মনে করিয়ে দেওয়া হবে, নবায়ন করবেন নিজে।', 'Nothing is charged automatically. You’ll be reminded before your period ends and renew it yourself.'],
   ['বছরে', 'Per year'], ['কপি', 'Copy'], ['নম্বর কপি হয়েছে', 'Number copied'], ['আপনার', 'You have'], ['এই প্যাকেজে সর্বোচ্চ', 'this package allows up to'],

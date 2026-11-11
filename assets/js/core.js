@@ -1,12 +1,12 @@
-// Rentora shared helpers: data client, formatting, safe HTML, dialogs, toasts, icons.
+// বাসা ম্যানেজার shared helpers: data client, formatting, safe HTML, dialogs, toasts, icons.
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, COMPANY, COMPANY_URL } from './config.js';
 
 const params = new URLSearchParams(location.search);
 const demoParam = params.get('demo');
 // ---------- Language (bn default, en optional) ----------
-let langSaved = null; try { langSaved = localStorage.getItem('rentora_lang'); } catch {}
+let langSaved = null; try { langSaved = localStorage.getItem('basha_lang'); } catch {}
 export const LANG = langSaved === 'en' ? 'en' : 'bn';
-export function setLang(l) { try { localStorage.setItem('rentora_lang', l); } catch {} location.reload(); }
+export function setLang(l) { try { localStorage.setItem('basha_lang', l); } catch {} location.reload(); }
 document.documentElement.lang = LANG;
 document.documentElement.setAttribute('translate', 'no');
 
@@ -50,8 +50,8 @@ if (I18N) {
   } }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: TR_ATTRS });
   new MutationObserver(() => { const t = tr(document.title); if (t !== document.title) document.title = t; }).observe(document.querySelector('title') || document.head, { childList: true, subtree: true, characterData: true });
 }
-if (demoParam) { try { sessionStorage.setItem('rentora_demo', demoParam); } catch {} }
-let storedDemo = null; try { storedDemo = sessionStorage.getItem('rentora_demo'); } catch {}
+if (demoParam) { try { sessionStorage.setItem('basha_demo', demoParam); } catch {} }
+let storedDemo = null; try { storedDemo = sessionStorage.getItem('basha_demo'); } catch {}
 // Demo mode (sample data in the browser) never runs on the live site.
 const DEV_HOST = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
 export const DEMO_ALLOWED = DEV_HOST || !SUPABASE_URL;
@@ -70,7 +70,7 @@ export async function getClient() {
   }
   return client;
 }
-export function exitDemo() { try { sessionStorage.removeItem('rentora_demo'); } catch {} }
+export function exitDemo() { try { sessionStorage.removeItem('basha_demo'); } catch {} }
 
 // ---------- Safe HTML ----------
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -207,13 +207,13 @@ export const opts = (map, sel) => raw(Object.entries(map).map(([v, t]) => `<opti
 
 // ---------- Theme ----------
 export function initTheme() {
-  let t = null; try { t = localStorage.getItem('rentora_theme'); } catch {}
+  let t = null; try { t = localStorage.getItem('basha_theme'); } catch {}
   if (t) document.documentElement.dataset.theme = t;
 }
 export function toggleTheme() {
   const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const next = cur === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next;
-  try { localStorage.setItem('rentora_theme', next); } catch {}
+  try { localStorage.setItem('basha_theme', next); } catch {}
 }
 export const poweredBy = () => html`<span class="powered">Powered by <a href="${COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit"><b>${COMPANY}</b></a></span>`;
 export function demoBanner() {

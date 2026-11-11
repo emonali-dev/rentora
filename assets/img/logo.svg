@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="বাসা ম্যানেজার">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14614b"/><stop offset="1" stop-color="#0b3a2d"/></linearGradient>
+    <linearGradient id="gd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c650"/><stop offset="1" stop-color="#d49a1c"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <rect x="7" y="7" width="498" height="498" rx="110" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="10"/>
+  <!-- ledger lines -->
+  <g stroke="#ffffff" stroke-opacity=".06" stroke-width="4"><path d="M0 128H512M0 192H512M0 256H512M0 320H512M0 384H512M0 448H512"/></g>
+  <!-- house body -->
+  <path d="M136 252 L256 152 L376 252 V392 a22 22 0 0 1 -22 22 H158 a22 22 0 0 1 -22 -22 Z" fill="#ffffff"/>
+  <!-- roof -->
+  <path d="M96 262 L256 128 L416 262" fill="none" stroke="url(#gd)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- keyhole door -->
+  <circle cx="256" cy="300" r="36" fill="#0e4a3a"/>
+  <path d="M236 316 H276 L290 396 H222 Z" fill="#0e4a3a"/>
+  <!-- tick: rent paid -->
+  <circle cx="372" cy="372" r="58" fill="url(#gd)" stroke="#0e4a3a" stroke-width="14"/>
+  <path d="M346 372 l18 18 l34 -36" fill="none" stroke="#0e4a3a" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

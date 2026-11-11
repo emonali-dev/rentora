@@ -8,8 +8,8 @@ const addD = (iso, k) => new Date(Date.parse(iso) + k * 864e5).toISOString().sli
 const now = () => new Date().toISOString();
 
 const USERS = {
-  owner: { id: 'u-owner', email: 'owner@demo.rentora', name: 'আব্দুর রহমান' },
-  tenant: { id: 'u-tenant', email: 'karim@demo.rentora', name: 'করিম আহমেদ' },
+  owner: { id: 'u-owner', email: 'owner@demo.bashamanager', name: 'আব্দুর রহমান' },
+  tenant: { id: 'u-tenant', email: 'karim@demo.bashamanager', name: 'করিম আহমেদ' },
   admin: { id: 'u-admin', email: 'admin@siddiqiya.demo', name: 'Super Admin' },
 };
 
@@ -43,7 +43,7 @@ function seed() {
   U('u5', 'b-1', '3A', 'flat', '৩', 15000, null, 3); U('u6', 'b-1', '3B', 'flat', '৩', 12500, null, 2); U('u7', 'b-1', '4A', 'flat', '৪', 16000, null, 3); U('u8', 'b-1', '4B', 'flat', '৪', 13000, null, 2);
   U('u9', 'b-2', '1A', 'flat', '১', 11000, null, 2); U('u10', 'b-2', 'রুম ১', 'room', '২', 4500, null); U('u11', 'b-2', 'রুম ২', 'room', '২', 4500, null); U('u12', 'b-2', '2A', 'flat', '২', 10000, null, 2);
   U('u13', 'b-3', 'দোকান ১', 'shop', 'নিচ', 18000); U('u14', 'b-3', 'দোকান ২', 'shop', 'নিচ', 16000); U('u15', 'b-3', 'দোকান ৩', 'shop', 'নিচ', 16000);
-  const people = [['করিম আহমেদ', '01722000001', 'karim@demo.rentora', 'u3'], ['সালমা বেগম', '01722000002', null, 'u1'], ['তানভীর হাসান', '01722000003', null, 'u2'], ['নুসরাত জাহান', '01722000004', null, 'u4'],
+  const people = [['করিম আহমেদ', '01722000001', 'karim@demo.bashamanager', 'u3'], ['সালমা বেগম', '01722000002', null, 'u1'], ['তানভীর হাসান', '01722000003', null, 'u2'], ['নুসরাত জাহান', '01722000004', null, 'u4'],
     ['মোঃ রফিকুল ইসলাম', '01722000005', null, 'u5'], ['ফারহানা আক্তার', '01722000006', null, 'u7'], ['জাহিদ হোসেন', '01722000007', null, 'u9'], ['রাকিব (ছাত্র)', '01722000008', null, 'u10'],
     ['মিতু ফার্মেসি', '01722000009', null, 'u13'], ['আল-আমিন স্টোর', '01722000010', null, 'u14'], ['শাহানা পারভীন', '01722000011', null, 'u8']];
   people.forEach(([name, phone, email, unit], i) => {

@@ -1,4 +1,4 @@
-// Rentora owner dashboard (landlord, manager, accountant).
+// বাসা ম্যানেজার owner dashboard (landlord, manager, accountant).
 import { getClient, IS_DEMO, exitDemo, html, raw, esc, $, $$, n, tk, monthLabel, shortMonth, dateBn, todayISO, monthStart, addMonths, LABEL, chip, icon,
   toast, run, errText, openSheet, formSheet, confirmSheet, field, opts, initTheme, toggleTheme, poweredBy, demoBanner, download, printDoc, bnDigits, langButton } from './core.js';
 
@@ -39,7 +39,7 @@ async function boot() {
   const ids = members.map(m => m.org_id);
   const { data: orgs } = await S.db.from('organizations').select('*').in('id', ids);
   S.orgs = orgs; S.members = members;
-  let saved = null; try { saved = localStorage.getItem('rentora_org'); } catch {}
+  let saved = null; try { saved = localStorage.getItem('basha_org'); } catch {}
   await selectOrg(orgs.find(o => o.id === saved)?.id || orgs[0].id);
   const sw = $('#orgSwitch');
   if (orgs.length > 1) { sw.hidden = false; sw.innerHTML = String(opts(Object.fromEntries(orgs.map(o => [o.id, o.name])), S.org.id)); sw.onchange = () => selectOrg(sw.value).then(route); }
@@ -51,7 +51,7 @@ async function boot() {
 
 async function selectOrg(id) {
   S.org = S.orgs.find(o => o.id === id); S.role = S.members.find(m => m.org_id === id).role;
-  try { localStorage.setItem('rentora_org', id); } catch {}
+  try { localStorage.setItem('basha_org', id); } catch {}
   await loadAll();
 }
 async function fetchAll(table, order = 'created_at') {
@@ -135,7 +135,7 @@ async function route() {
   const r = ROUTES[id] ? id : 'home';
   navRender(r);
   $('#pageTitle').textContent = NAV.find(x => x.id === r).t;
-  document.title = NAV.find(x => x.id === r).t + ' — Rentora';
+  document.title = NAV.find(x => x.id === r).t + ' — বাসা ম্যানেজার';
   trialBar();
   try { await ROUTES[r](); } catch (e) { console.error(e); view().innerHTML = String(html`<div class="empty"><p>${errText(e)}</p><button class="btn" onclick="location.reload()">আবার চেষ্টা করুন</button></div>`); }
 }
@@ -168,7 +168,7 @@ async function pageHome() {
     ['প্রথম ভাড়া আদায় করুন', S.d.payments.length > 0, null],
   ];
   const doneN = steps.filter(x => x[1]).length, nextStep = steps.find(x => !x[1]);
-  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।</p></div>
+  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই বাসা ম্যানেজার পুরোপুরি কাজ শুরু করবে।</p></div>
       <div class="meter" style="background:var(--surface-2);width:160px"><i style="width:${doneN / steps.length * 100}%"></i></div></div>
     <ol class="steps-list">${steps.map(([t, ok, href]) => html`<li class="${ok ? 'done' : (nextStep && nextStep[0] === t ? 'next' : '')}">${ok ? html`<span>${t}</span>` : href ? html`<a href="${href}">${t}</a>` : html`<button type="button" class="link-btn" data-pay-first>${t}</button>`}</li>`)}</ol></section>` : '';
   view().innerHTML = String(html`
@@ -520,7 +520,7 @@ function invoiceDoc(i, items, t, u, pays) {
     <table><thead><tr><th>বিবরণ</th><th class="r">টাকা</th></tr></thead><tbody>${items.map(x => `<tr><td>${esc(bnDigits(x.description))}</td><td class="r">${esc(tk(x.amount))}</td></tr>`).join('')}
       <tr class="total"><td>মোট</td><td class="r">${esc(tk(i.subtotal))}</td></tr><tr><td>পরিশোধিত</td><td class="r">${esc(tk(i.paid_amount))}</td></tr><tr><td><b>বকেয়া</b></td><td class="r"><b>${esc(tk(due(i)))}</b></td></tr></tbody></table>
     <span class="stamp ${i.status === 'paid' ? '' : 'unpaid'}">${esc(i.status === 'void' ? 'বাতিল' : LABEL.status[i.status])}</span>
-    <div class="foot"><span>${pays.length ? 'রসিদ: ' + esc(pays.map(p => p.receipt_no).join(', ')) : ''}</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
+    <div class="foot"><span>${pays.length ? 'রসিদ: ' + esc(pays.map(p => p.receipt_no).join(', ')) : ''}</span><span>বাসা ম্যানেজার · Powered by SIDDIQIYA Technology</span></div></div>`;
 }
 function invoiceText(i, items, t, u) {
   return `${S.org.name}\nইনভয়েস ${i.invoice_no} (${monthLabel(i.period)})\n${t.full_name}, ${unitName(u)}\n` + items.map(x => `• ${x.description}: ৳${x.amount}`).join('\n') +
@@ -534,7 +534,7 @@ function receiptSheet(pid) {
       <tr><td>মাধ্যম</td><td class="r">${esc(LABEL.method[p.method])}${p.reference ? ' — ' + esc(p.reference) : ''}</td></tr><tr class="total"><td>আদায়</td><td class="r">${esc(tk(p.amount))}</td></tr>
       <tr><td>ইনভয়েসের বাকি</td><td class="r">${esc(tk(due(i)))}</td></tr></tbody></table>
     <span class="stamp">${esc(due(i) > 0 ? 'আংশিক' : 'পরিশোধিত')}</span>
-    <div class="foot"><span>স্বাক্ষর: ____________</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`;
+    <div class="foot"><span>স্বাক্ষর: ____________</span><span>বাসা ম্যানেজার · Powered by SIDDIQIYA Technology</span></div></div>`;
   const d = openSheet({ wide: true, title: 'রসিদ ' + p.receipt_no, body: raw(doc), foot: html`${can.owner() ? html`<button class="btn danger" data-delpay style="margin-right:auto">ভুল পেমেন্ট মুছুন</button>` : ''}<button class="btn" data-print>${icon('print')}প্রিন্ট / PDF</button>
     <a class="btn primary" target="_blank" rel="noopener" href="${waLink(t.phone, `${S.org.name}\nরসিদ ${p.receipt_no}\n${t.full_name}, ${unitName(u)}\nজমা: ৳${p.amount} (${LABEL.method[p.method]})\nতারিখ: ${dateBn(p.paid_on)}\nবাকি: ৳${due(i)}\nধন্যবাদ।`)}">WhatsApp-এ রসিদ পাঠান</a>` });
   $('[data-print]', d).onclick = () => printDoc(doc);
@@ -581,7 +581,7 @@ async function pageMoney() {
     ['প্রথম ভাড়া আদায় করুন', S.d.payments.length > 0, null],
   ];
   const doneN = steps.filter(x => x[1]).length, nextStep = steps.find(x => !x[1]);
-  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই Rentora পুরোপুরি কাজ শুরু করবে।</p></div>
+  const guide = doneN < steps.length && can.manage() ? html`<section class="panel start-guide"><div class="panel-head"><div><h2>শুরু করার ধাপ</h2><p class="muted small">${n(steps.length)}টির মধ্যে ${n(doneN)}টি সম্পন্ন — বাকিগুলো করলেই বাসা ম্যানেজার পুরোপুরি কাজ শুরু করবে।</p></div>
       <div class="meter" style="background:var(--surface-2);width:160px"><i style="width:${doneN / steps.length * 100}%"></i></div></div>
     <ol class="steps-list">${steps.map(([t, ok, href]) => html`<li class="${ok ? 'done' : (nextStep && nextStep[0] === t ? 'next' : '')}">${ok ? html`<span>${t}</span>` : href ? html`<a href="${href}">${t}</a>` : html`<button type="button" class="link-btn" data-pay-first>${t}</button>`}</li>`)}</ol></section>` : '';
   view().innerHTML = String(html`
@@ -600,7 +600,7 @@ async function pageMoney() {
   wireMonth(view(), pageMoney);
   $('#addInc').onclick = () => ledgerSheet({ entry_type: 'income' }); $('#addExp').onclick = () => ledgerSheet({ entry_type: 'expense' });
   $$('[data-led]').forEach(r => r.onclick = () => ledgerSheet(rows.find(x => x.id === r.dataset.led)));
-  $('#csv').onclick = () => download(`rentora-${m.slice(0, 7)}.csv`, '﻿' + [['তারিখ', 'ধরন', 'খাত', 'টাকা', 'সম্পত্তি', 'বিবরণ'].join(','), ...rows.map(r => [r.entry_date, r.entry_type === 'income' ? 'আয়' : 'খরচ', r.category, r.amount, PR(r.property_id)?.name || '', r.description || ''].map(x => `"${String(x).replace(/"/g, '""')}"`).join(','))].join('\n'), 'text/csv');
+  $('#csv').onclick = () => download(`basha-manager-${m.slice(0, 7)}.csv`, '﻿' + [['তারিখ', 'ধরন', 'খাত', 'টাকা', 'সম্পত্তি', 'বিবরণ'].join(','), ...rows.map(r => [r.entry_date, r.entry_type === 'income' ? 'আয়' : 'খরচ', r.category, r.amount, PR(r.property_id)?.name || '', r.description || ''].map(x => `"${String(x).replace(/"/g, '""')}"`).join(','))].join('\n'), 'text/csv');
 }
 function ledgerSheet(r) {
   if (!writable()) { toast('সাবস্ক্রিপশনের মেয়াদ শেষ। নবায়ন করুন।', true); return; }
@@ -658,8 +658,8 @@ async function pageReports() {
     </div>`);
   $$('[data-y]').forEach(b => b.onclick = () => { repYear += Number(b.dataset.y); pageReports(); });
   $$('[data-inv]').forEach(r => r.onclick = () => invoiceSheet(r.dataset.inv));
-  $('#repCsv').onclick = () => download(`rentora-report-${y}.csv`, '﻿' + [['মাস', 'বিল', 'ভাড়া আদায়', 'অন্যান্য আয়', 'খরচ', 'লাভ'].join(','), ...table.map(r => [r.m, r.billed, r.rent, r.other, r.exp, r.profit].join(',')), ['মোট', T('billed'), T('rent'), T('other'), T('exp'), T('profit')].join(',')].join('\n'), 'text/csv');
-  $('#repPrint').onclick = () => printDoc(`<div class="doc">${docHead('লাভ-ক্ষতি রিপোর্ট', String(y))}<table><thead><tr><th>মাস</th><th class="r">বিল</th><th class="r">ভাড়া আদায়</th><th class="r">অন্যান্য আয়</th><th class="r">খরচ</th><th class="r">লাভ</th></tr></thead><tbody>${table.map(r => `<tr><td>${esc(monthLabel(r.m + '-01'))}</td><td class="r">${esc(tk(r.billed))}</td><td class="r">${esc(tk(r.rent))}</td><td class="r">${esc(tk(r.other))}</td><td class="r">${esc(tk(r.exp))}</td><td class="r">${esc(tk(r.profit))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(T('billed')))}</td><td class="r">${esc(tk(T('rent')))}</td><td class="r">${esc(tk(T('other')))}</td><td class="r">${esc(tk(T('exp')))}</td><td class="r">${esc(tk(T('profit')))}</td></tr></tbody></table><div class="foot"><span>তৈরি: ${esc(dateBn(today))}</span><span>Rentora · Powered by SIDDIQIYA Technology</span></div></div>`);
+  $('#repCsv').onclick = () => download(`basha-manager-report-${y}.csv`, '﻿' + [['মাস', 'বিল', 'ভাড়া আদায়', 'অন্যান্য আয়', 'খরচ', 'লাভ'].join(','), ...table.map(r => [r.m, r.billed, r.rent, r.other, r.exp, r.profit].join(',')), ['মোট', T('billed'), T('rent'), T('other'), T('exp'), T('profit')].join(',')].join('\n'), 'text/csv');
+  $('#repPrint').onclick = () => printDoc(`<div class="doc">${docHead('লাভ-ক্ষতি রিপোর্ট', String(y))}<table><thead><tr><th>মাস</th><th class="r">বিল</th><th class="r">ভাড়া আদায়</th><th class="r">অন্যান্য আয়</th><th class="r">খরচ</th><th class="r">লাভ</th></tr></thead><tbody>${table.map(r => `<tr><td>${esc(monthLabel(r.m + '-01'))}</td><td class="r">${esc(tk(r.billed))}</td><td class="r">${esc(tk(r.rent))}</td><td class="r">${esc(tk(r.other))}</td><td class="r">${esc(tk(r.exp))}</td><td class="r">${esc(tk(r.profit))}</td></tr>`).join('')}<tr class="total"><td>মোট</td><td class="r">${esc(tk(T('billed')))}</td><td class="r">${esc(tk(T('rent')))}</td><td class="r">${esc(tk(T('other')))}</td><td class="r">${esc(tk(T('exp')))}</td><td class="r">${esc(tk(T('profit')))}</td></tr></tbody></table><div class="foot"><span>তৈরি: ${esc(dateBn(today))}</span><span>বাসা ম্যানেজার · Powered by SIDDIQIYA Technology</span></div></div>`);
 }
 const T2name = i => T(i.tenant_id)?.full_name || '—';
 
@@ -741,15 +741,15 @@ async function pageSettings() {
     <section class="panel"><h2 style="margin-bottom:.8rem">আমার অ্যাকাউন্ট</h2>
       <dl class="kv"><dt>ইমেইল</dt><dd>${S.user.email}</dd><dt>ভূমিকা</dt><dd>${LABEL.role[S.role]}</dd></dl>
       <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem"><button class="btn" id="pw">${icon('key')}পাসওয়ার্ড বদলান</button><button class="btn" id="th">${icon('moon')}ডার্ক/লাইট মোড</button>${S.isAdmin ? html`<a class="btn" href="admin.html">${icon('crown')}Super Admin</a>` : ''}<button class="btn danger" id="lo">${icon('logout')}লগ আউট</button></div></section>
-    <p class="small muted" style="text-align:center;margin-top:1.5rem">Rentora · ${poweredBy()} · সাপোর্ট: ${bnDigits(S.settings.support_phone || '01778662833')}</p>`);
+    <p class="small muted" style="text-align:center;margin-top:1.5rem">বাসা ম্যানেজার · ${poweredBy()} · সাপোর্ট: ${bnDigits(S.settings.support_phone || '01778662833')}</p>`);
   $('#orgForm').onsubmit = async e => { e.preventDefault(); if (!can.owner()) return; const f = e.target; if (!f.checkValidity()) { f.reportValidity(); return; }
     const v = Object.fromEntries(new FormData(f)); const row = { name: v.name.trim(), phone: v.phone.trim() || null, address: v.address.trim() || null, invoice_prefix: v.invoice_prefix.toUpperCase(), receipt_prefix: v.receipt_prefix.toUpperCase(), default_due_day: Number(v.default_due_day) };
     await run(S.db.from('organizations').update(row).eq('id', o.id), 'সংরক্ষণ হয়েছে'); Object.assign(S.org, row); chrome(); };
-  $('#addM')?.addEventListener('click', () => formSheet({ title: 'টিম সদস্য যোগ করুন', submit: 'যোগ করুন', fields: html`<p class="small muted">সদস্যকে আগে Rentora-তে নিজের ইমেইল দিয়ে সাইন আপ করতে বলুন, তারপর সেই ইমেইল এখানে লিখুন।</p>
+  $('#addM')?.addEventListener('click', () => formSheet({ title: 'টিম সদস্য যোগ করুন', submit: 'যোগ করুন', fields: html`<p class="small muted">সদস্যকে আগে বাসা ম্যানেজার-এ নিজের ইমেইল দিয়ে সাইন আপ করতে বলুন, তারপর সেই ইমেইল এখানে লিখুন।</p>
     ${field('ইমেইল', html`<input class="input" name="email" type="email" required>`)}${field('ভূমিকা', html`<select class="input" name="role">${opts({ manager: 'ম্যানেজার', accountant: 'হিসাবরক্ষক' })}</select>`)}`,
     onSubmit: async v => { await run(S.db.rpc('add_org_member', { p_org: o.id, p_email: v.email.trim(), p_role: v.role }), 'সদস্য যোগ হয়েছে'); pageSettings(); } }));
   $$('[data-rm]').forEach(b => b.onclick = async () => { if (await confirmSheet('এই সদস্যকে টিম থেকে বাদ দেবেন?', 'বাদ দিন')) { await run(S.db.rpc('remove_org_member', { p_org: o.id, p_user: b.dataset.rm }), 'বাদ দেওয়া হয়েছে'); pageSettings(); } });
-  $('#exp')?.addEventListener('click', async () => { const data = await run(S.db.rpc('export_org_data', { p_org: o.id })); download(`rentora-backup-${todayISO()}.json`, JSON.stringify(data, null, 2)); });
+  $('#exp')?.addEventListener('click', async () => { const data = await run(S.db.rpc('export_org_data', { p_org: o.id })); download(`basha-manager-backup-${todayISO()}.json`, JSON.stringify(data, null, 2)); });
   $('#pw').onclick = () => formSheet({ title: 'পাসওয়ার্ড বদলান', fields: html`${field('নতুন পাসওয়ার্ড', html`<input class="input" name="pw" type="password" minlength="8" required autocomplete="new-password">`, 'কমপক্ষে ৮ অক্ষর')}`,
     onSubmit: async v => { await run(S.db.auth.updateUser({ password: v.pw }), 'পাসওয়ার্ড বদলানো হয়েছে'); } });
   $('#th').onclick = toggleTheme; $('#lo').onclick = logout;
@@ -757,13 +757,13 @@ async function pageSettings() {
 
 // ---------------- Onboarding (new landlord) ----------------
 function onboarding() {
-  $('.side').style.display = 'none'; $('#bottomNav').hidden = true; $('#fab').hidden = true; $('#pageTitle').textContent = 'Rentora-তে স্বাগতম';
+  $('.side').style.display = 'none'; $('#bottomNav').hidden = true; $('#fab').hidden = true; $('#pageTitle').textContent = 'বাসা ম্যানেজার-এ স্বাগতম';
   view().innerHTML = String(html`<section class="panel" style="max-width:560px;margin:2rem auto"><h2>আপনার ব্যবসার অ্যাকাউন্ট খুলুন</h2>
     <p class="muted" style="margin:.4rem 0 1rem">${n(14)} দিন সম্পূর্ণ ফ্রি। কোনো কার্ড লাগবে না।</p>
     <form class="form" id="ob">${field('বাড়ি বা ব্যবসার নাম', html`<input class="input" name="name" required minlength="2" maxlength="120" placeholder="যেমন: রহমান প্রপার্টিজ">`)}
       ${field('মোবাইল', html`<input class="input" name="phone" inputmode="tel" pattern="\\+?[0-9 \\-]{6,20}" placeholder="01XXXXXXXXX">`)}${field('ঠিকানা', html`<input class="input" name="address" maxlength="300">`)}
       <div class="form-error" hidden></div><button class="btn primary block">শুরু করুন</button></form>
-    <p class="small muted" style="margin-top:1rem">ভাড়াটিয়া হিসেবে লগইন করেছেন? আপনার বাড়িওয়ালাকে Rentora-তে আপনার এই ইমেইলটি দিতে বলুন: <b>${S.user.email}</b></p>
+    <p class="small muted" style="margin-top:1rem">ভাড়াটিয়া হিসেবে লগইন করেছেন? আপনার বাড়িওয়ালাকে বাসা ম্যানেজার-এ আপনার এই ইমেইলটি দিতে বলুন: <b>${S.user.email}</b></p>
     <p style="margin-top:.6rem"><button class="link-btn" id="obOut">লগ আউট</button></p></section>`);
   $('#obOut').onclick = logout;
   $('#ob').onsubmit = async e => { e.preventDefault(); const f = e.target, err = $('.form-error', f); err.hidden = true; if (!f.checkValidity()) { f.reportValidity(); return; }

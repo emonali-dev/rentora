@@ -1,6 +1,6 @@
 // Login, sign-up and password reset for landlords and tenants.
 // Leaving a demo: the login page always starts from the real backend.
-try { sessionStorage.removeItem('rentora_demo'); } catch {}
+try { sessionStorage.removeItem('basha_demo'); } catch {}
 const { getClient, IS_DEMO, DEMO_ALLOWED, $, $$, errText, poweredBy, initTheme, langButton } = await import('./core.js');
 initTheme();
 $('#langSlot').append(langButton('btn sm'));

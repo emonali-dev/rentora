@@ -1,4 +1,4 @@
-/* Rentora — Powered by SIDDIQIYA Technology
+/* বাসা ম্যানেজার (Basha Manager) — Powered by SIDDIQIYA Technology
    Concept: a landlord's rent ledger (ভাড়ার খাতা). Ledger green + brand gold on a cool paper ground.
    Desktop: green sidebar + content. Phone: app bar, bottom tabs, one central "টাকা জমা" action. */
 :root {
@@ -362,7 +362,7 @@ table.t td:first-child { white-space: nowrap; }
   .auth-form { padding-top: 24px; }
 }
 
-/* Brand mark: the Rentora logo tile (house, key and name) */
+/* Brand mark: the Basha Manager logo tile (house with keyhole door and paid tick) */
 .mark { background: url("../img/logo-128.png") center / cover no-repeat; color: transparent !important; font-size: 0 !important; box-shadow: 0 2px 6px rgba(0, 25, 80, .25); border-radius: 24%; overflow: hidden; }
 .lp-brand .mark, .topbar .mark, .side .mark { background-image: url("../img/logo-128.png"); }
 .auth-art .mark, .lp-final .mark { box-shadow: 0 4px 14px rgba(0, 0, 0, .3); }
